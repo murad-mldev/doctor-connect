@@ -1,0 +1,65 @@
+<div class="payment-container">
+  <h3>Payment Details</h3>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div class="payment-content">
+    <div class="payment-summary">
+      <div class="summary-row">
+        <span>Consultation Fee:</span>
+        <span class="amount">৳{{ amount }}</span>
+      </div>
+      <div class="summary-row">
+        <span>Platform Fee (10%):</span>
+        <span class="amount">৳{{ platformFee }}</span>
+      </div>
+      <div class="summary-total">
+        <span>Total:</span>
+        <span class="total-amount">৳{{ amount }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="!paymentProcessing && !paymentSuccess" class="payment-button">
+      <button
+        (click)="initiateStripePayment()"
+        [disabled]="loading"
+        class="btn-pay"
+      >
+        <span *ngIf="!loading">Pay with Stripe</span>
+        <span *ngIf="loading">Processing...</span>
+      </button>
+    </div>
+
+    <div *ngIf="paymentProcessing" class="processing-state">
+      <div class="spinner"></div>
+      <p>Processing payment...</p>
+    </div>
+
+    <div *ngIf="paymentSuccess" class="success-state">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <p>Payment Successful!</p>
+    </div>
+
+    <div class="secure-info">
+      <img
+        src="https://stripe.com/img/v3/home/social.png"
+        alt="Secured by Stripe"
+        class="stripe-logo"
+      />
+      <p>Payments are securely processed by Stripe</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+<div class="dashboard-layout">
+  <app-sidebar [menuItems]="menuItems" [userRole]="'Admin Panel'" (logoutClicked)="onLogout()"></app-sidebar>
+
+  <div class="dashboard-content">
+    <!-- Router outlet for child routes -->
+    <router-outlet></router-outlet>
+
+    <!-- Dashboard overview content - only show on base route -->
+    <div class="dashboard-container" *ngIf="isOnBaseDashboard">
+      <div class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <p>Manage system resources and user verifications</p>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card stat-blue">
+          <div class="stat-content">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <dt>Total Doctors</dt>
+              <dd>{{ stats?.totalDoctors || 0 }}</dd>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-green">
+          <div class="stat-content">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <dt>Total Appointments</dt>
+              <dd>{{ stats?.totalAppointments || 0 }}</dd>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card stat-warning">
+          <div class="stat-content">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <dt>Pending Doctors</dt>
+              <dd>{{ pendingDoctors.length }}</dd>
+            </div>
+          </div>
+          <div class="stat-footer">
+            <a routerLink="/admin/dashboard/doctor-verification">Review</a>
+          </div>
+        </div>
+
+        <div class="stat-card stat-purple">
+          <div class="stat-content">
+            <div class="stat-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <dt>Revenue</dt>
+              <dd>{{ stats?.totalAppointments || 0 }}</dd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Grid -->
+      <div class="content-grid">
+        <!-- Quick Actions -->
+        <div class="card">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <a
+              routerLink="/admin/dashboard/doctor-verification"
+              class="action-card action-warning"
+            >
+              <div class="action-title">Doctor Verification</div>
+              <div class="action-desc">
+                Review and approve doctor registrations
+              </div>
+            </a>
+            <a
+              routerLink="/admin/dashboard/medicines"
+              class="action-card action-primary"
+            >
+              <div class="action-title">Manage Medicines</div>
+              <div class="action-desc">Add and manage medicine database</div>
+            </a>
+            <a
+              routerLink="/admin/dashboard/lab-tests"
+              class="action-card action-success"
+            >
+              <div class="action-title">Manage Lab Tests</div>
+              <div class="action-desc">Add and manage lab test database</div>
+            </a>
+            <a
+              routerLink="/admin/dashboard/roles"
+              class="action-card action-purple"
+            >
+              <div class="action-title">Manage Roles</div>
+              <div class="action-desc">
+                Configure user roles and permissions
+              </div>
+            </a>
+            <a
+              routerLink="/admin/dashboard/users"
+              class="action-card action-info"
+            >
+              <div class="action-title">Manage Users</div>
+              <div class="action-desc">
+                View and manage system users
+              </div>
+            </a>
+            <a
+              routerLink="/admin/dashboard/departments"
+              class="action-card action-secondary"
+            >
+              <div class="action-title">Manage Departments</div>
+              <div class="action-desc">
+                Add and manage medical departments
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Pending Verifications -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Pending Doctor Verifications</h2>
+            <a
+              routerLink="/admin/dashboard/doctor-verification"
+              class="card-link"
+              >View all</a
+            >
+          </div>
+          <div *ngIf="pendingDoctors.length === 0" class="empty-state">
+            No pending verifications
+          </div>
+          <div *ngIf="pendingDoctors.length > 0" class="doctors-list">
+            <div
+              *ngFor="let doctor of pendingDoctors.slice(0, 5)"
+              class="doctor-item"
+            >
+              <div class="doctor-name">Dr. {{ doctor.user?.fullName }}</div>
+              <div class="doctor-specialty">{{ doctor.specialization }}</div>
+              <div class="doctor-actions">
+                <button (click)="verifyDoctor(doctor.id!)" class="btn-verify">
+                  Verify
+                </button>
+                <button (click)="rejectDoctor(doctor.id!)" class="btn-reject">
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

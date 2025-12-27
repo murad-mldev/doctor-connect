@@ -1,0 +1,228 @@
+.prescription-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.prescription-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  .header-info {
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+
+  .prescription-id {
+    padding: 0.25rem 0.75rem;
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+  }
+}
+
+.prescription-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-section {
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .doctor-name,
+  .patient-name {
+    font-size: 0.875rem;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  .doctor-specialty {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  .diagnosis-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.medicines-section,
+.tests-section,
+.notes-section {
+  h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.medicines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .medicine-item {
+    background: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .medicine-details {
+      flex: 1;
+
+      .medicine-name {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #1f2937;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .medicine-dosage {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .medicine-generic {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        margin: 0;
+      }
+    }
+
+    .medicine-type {
+      font-size: 0.75rem;
+      color: #2563eb;
+      font-weight: 500;
+    }
+  }
+}
+
+.tests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .test-item {
+    background: #eff6ff;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+
+    .test-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #1e3a8a;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .test-desc {
+      font-size: 0.75rem;
+      color: #1e40af;
+      margin: 0;
+    }
+  }
+}
+
+.notes-section {
+  p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.followup-alert {
+  background: #fef3c7;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #d97706;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .followup-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #78350f;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .followup-date {
+    font-size: 0.75rem;
+    color: #92400e;
+    margin: 0;
+  }
+}
+
+.prescription-actions {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+
+  .btn-download {
+    background: #3b82f6;
+    color: white;
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+
+  .btn-print {
+    background: #f3f4f6;
+    color: #374151;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+}

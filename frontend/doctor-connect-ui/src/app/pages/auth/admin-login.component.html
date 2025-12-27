@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <div class="auth-card admin-card">
+    <div class="auth-header">
+      <div class="admin-badge">
+        <span>Admin Portal</span>
+      </div>
+      <h2>Admin Sign In</h2>
+      <p>Sign in with admin credentials</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="username">Admin Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          required
+          [(ngModel)]="credentials.username"
+          placeholder="Enter admin username"
+          class="form-input"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          [(ngModel)]="credentials.password"
+          placeholder="Enter admin password"
+          class="form-input"
+        />
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="btn-admin btn-full"
+      >
+        <span *ngIf="!loading">Admin Sign In</span>
+        <span *ngIf="loading">Signing in...</span>
+      </button>
+
+      <div class="auth-footer">
+        <a routerLink="/login" class="link-secondary">Back to user login</a>
+      </div>
+    </form>
+  </div>
+</div>

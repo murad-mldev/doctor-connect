@@ -1,0 +1,214 @@
+/* About page styles — aligned with home.scss design system */
+
+// Hero Section (match home styles)
+.hero-section {
+  background: white;
+  padding: 4.5rem 0;
+
+  .container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .hero-content {
+    text-align: center;
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 1rem;
+
+      @media (min-width: 768px) {
+        font-size: 3.25rem;
+      }
+
+      .accent {
+        color: #45ffca;
+      }
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: #4b5563;
+      margin: 0 auto 1.75rem;
+      max-width: 48rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      button {
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .btn-get-started {
+        background: #45ffca;
+        color: #0f172a;
+        box-shadow: 0 6px 12px rgba(69, 255, 202, 0.15);
+      }
+
+      button:not(.btn-get-started) {
+        background: transparent;
+        color: #1f2937;
+        border: 1px solid rgba(31, 41, 55, 0.06);
+      }
+    }
+  }
+}
+
+// Sections & headers
+.section {
+  padding: 4rem 0;
+
+  &.bg-white {
+    background: white;
+  }
+
+  &.bg-gray {
+    background: #f9fafb;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+
+      @media (min-width: 768px) {
+        font-size: 2.25rem;
+      }
+    }
+
+    p {
+      color: #4b5563;
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+  }
+}
+
+// Features grid (use same card styles as home)
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .feature-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    background: #fff;
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 140px;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px -6px rgba(31, 41, 55, 0.08);
+    }
+
+    .feature-icon {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(69, 255, 202, 0.08);
+      margin-bottom: 1rem;
+
+      lucide-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #45ffca;
+      }
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #4b5563;
+      flex: 1;
+    }
+  }
+}
+
+// CTA
+.cta-section {
+  padding: 4rem 0;
+  text-align: center;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    .btn-get-started {
+      background: #45ffca;
+      color: #0f172a;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+    }
+  }
+}
+
+// Small helpers
+.hero-section .container,
+.section .container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+// Make sure content has breathing room on small screens
+@media (max-width: 639px) {
+  .hero-section {
+    padding: 3rem 0;
+
+    .hero-content h1 {
+      font-size: 1.75rem;
+    }
+
+    .features-grid .feature-card {
+      min-height: auto;
+    }
+  }
+}

@@ -26,8 +26,8 @@ public class ProfileServiceImpl implements ProfileService {
     private final DoctorProfileRepository doctorProfileRepository;
     private final PatientProfileRepository patientProfileRepository;
     private final UserRepository userRepository;
-    private final DoctorProfileMapper doctorMapper = DoctorProfileMapper.INSTANCE;
-    private final PatientProfileMapper patientMapper = PatientProfileMapper.INSTANCE;
+    private final DoctorProfileMapper doctorMapper;
+    private final PatientProfileMapper patientMapper;
 
     @Override
     public DoctorProfileDto getDoctorProfileByUserId(UUID userId) {

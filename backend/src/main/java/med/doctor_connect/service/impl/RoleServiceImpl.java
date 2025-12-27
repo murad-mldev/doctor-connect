@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleMapper roleMapper = RoleMapper.INSTANCE;
+    private final RoleMapper roleMapper;
 
     @Override
     public RoleDto createRole(RoleDto roleDto) {

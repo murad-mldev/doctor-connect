@@ -1,6 +1,7 @@
 package med.doctor_connect.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import med.doctor_connect.dto.UserDto;
 import med.doctor_connect.mapper.UserMapper;
 import med.doctor_connect.model.Role;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -44,11 +46,22 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // map role IDs to Role entities
+        // map role IDs or names to Role entities
         if (userDto.getRoles() != null && !userDto.getRoles().isEmpty()) {
             Set<Role> roles = userDto.getRoles().stream()
-                    .map(roleDto -> roleRepository.findById(UUID.fromString(roleDto.getId()))
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleDto.getId())))
+                    .map(roleDto -> {
+                        // Try to find by ID first if provided
+                        if (roleDto.getId() != null && !roleDto.getId().isBlank()) {
+                            return roleRepository.findById(UUID.fromString(roleDto.getId()))
+                                    .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleDto.getId()));
+                        }
+                        // Otherwise, try to find by name
+                        if (roleDto.getName() != null && !roleDto.getName().isBlank()) {
+                            return roleRepository.findByName(roleDto.getName())
+                                    .orElseThrow(() -> new RuntimeException("Role not found with name: " + roleDto.getName()));
+                        }
+                        throw new RuntimeException("Role must have either ID or name");
+                    })
                     .collect(Collectors.toSet());
             user.setRoles(roles);
         }
@@ -67,14 +80,26 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setPhone(userDto.getEmailOrPhoneNumber());
         }
+        log.info("User is active: {}", userDto.isActive());
         user.setActive(userDto.isActive());
         user.setVerified(userDto.isVerified());
 
         // update roles
         if (userDto.getRoles() != null) {
             Set<Role> roles = userDto.getRoles().stream()
-                    .map(roleDto -> roleRepository.findById(UUID.fromString(roleDto.getId()))
-                            .orElseThrow(() -> new RuntimeException("Role not found: " + roleDto.getId())))
+                    .map(roleDto -> {
+                        // Try to find by ID first if provided
+                        if (roleDto.getId() != null && !roleDto.getId().isBlank()) {
+                            return roleRepository.findById(UUID.fromString(roleDto.getId()))
+                                    .orElseThrow(() -> new RuntimeException("Role not found with ID: " + roleDto.getId()));
+                        }
+                        // Otherwise, try to find by name
+                        if (roleDto.getName() != null && !roleDto.getName().isBlank()) {
+                            return roleRepository.findByName(roleDto.getName())
+                                    .orElseThrow(() -> new RuntimeException("Role not found with name: " + roleDto.getName()));
+                        }
+                        throw new RuntimeException("Role must have either ID or name");
+                    })
                     .collect(Collectors.toSet());
             user.setRoles(roles);
         }

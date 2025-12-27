@@ -1,0 +1,220 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>My Profile</h1>
+      <p>Update your professional information</p>
+    </div>
+    <button class="btn-primary" (click)="saveProfile()" [disabled]="isSaving">
+      <lucide-icon [img]="Save" [size]="20"></lucide-icon>
+      <span>{{ isSaving ? 'Saving...' : 'Save Changes' }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="!isLoading && profile" class="profile-content">
+    <!-- Basic Information -->
+    <div class="content-card">
+      <h2>Basic Information</h2>
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="profileForm.fullName"
+              name="fullName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input
+              type="tel"
+              [(ngModel)]="profileForm.phone"
+              name="phone"
+              placeholder="Enter phone number"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Gender</label>
+            <select [(ngModel)]="profileForm.gender" name="gender">
+              <option value="">Select gender</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input
+              type="date"
+              [(ngModel)]="profileForm.dateOfBirth"
+              name="dateOfBirth"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <textarea
+            [(ngModel)]="profileForm.address"
+            name="address"
+            placeholder="Enter your address"
+            rows="2"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- Professional Information -->
+    <div class="content-card">
+      <h2>Professional Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Email:</label>
+          <span>{{ profile.user?.email }}</span>
+        </div>
+        <div class="info-item">
+          <label>Specialization:</label>
+          <span>{{ profile.specialization || '-' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Department:</label>
+          <span>{{ profile.department?.name || '-' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Designation:</label>
+          <span>{{ profile.designation || '-' }}</span>
+        </div>
+        <div class="info-item full-width">
+          <label>Qualifications:</label>
+          <span>{{ profile.qualifications || '-' }}</span>
+        </div>
+        <div class="info-item full-width">
+          <label>License Number:</label>
+          <span>{{ profile.licenseNumber || '-' }}</span>
+        </div>
+        <div class="info-item full-width">
+          <label>Description:</label>
+          <span>{{ profile.description || '-' }}</span>
+        </div>
+        <div class="info-item">
+          <label>Verification Status:</label>
+          <span class="status-badge" [class.approved]="profile.approved" [class.pending]="!profile.approved">
+            {{ profile.approved ? 'Verified' : 'Pending' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stripe Connect Section -->
+    <div class="content-card stripe-section">
+      <div class="section-header">
+        <div>
+          <h2>Payment Setup (Stripe Connect)</h2>
+          <p>Set up your payment account to receive consultation fees</p>
+        </div>
+        <button
+          class="btn-icon btn-refresh"
+          (click)="refreshStripeStatus()"
+          [disabled]="isLoadingStripe"
+          title="Refresh Status"
+        >
+          <lucide-icon [img]="RefreshCw" [size]="20"></lucide-icon>
+        </button>
+      </div>
+
+      <!-- No Stripe Account -->
+      <div *ngIf="!hasStripeAccount" class="stripe-status">
+        <div class="status-message info">
+          <lucide-icon [img]="UserCircle" [size]="24"></lucide-icon>
+          <div>
+            <h4>Payment Account Not Set Up</h4>
+            <p>Create a Stripe Connect account to start receiving payments for your consultations.</p>
+          </div>
+        </div>
+        <button
+          class="btn-primary"
+          (click)="createStripeAccount()"
+          [disabled]="isLoadingStripe"
+        >
+          Create Stripe Account
+        </button>
+      </div>
+
+      <!-- Stripe Account Created but Onboarding Incomplete -->
+      <div *ngIf="hasStripeAccount && !isStripeOnboardingComplete" class="stripe-status">
+        <div class="status-message warning">
+          <lucide-icon [img]="XCircle" [size]="24"></lucide-icon>
+          <div>
+            <h4>Complete Your Setup</h4>
+            <p>Your Stripe account has been created, but you need to complete the onboarding process to receive payments.</p>
+          </div>
+        </div>
+        <button
+          class="btn-primary"
+          (click)="completeStripeOnboarding()"
+          [disabled]="isLoadingStripe"
+        >
+          Complete Onboarding
+        </button>
+      </div>
+
+      <!-- Stripe Account Fully Set Up -->
+      <div *ngIf="hasStripeAccount && isStripeOnboardingComplete" class="stripe-status">
+        <div class="status-message success">
+          <lucide-icon [img]="CheckCircle" [size]="24"></lucide-icon>
+          <div>
+            <h4>Payment Account Active</h4>
+            <p>Your Stripe account is fully set up and ready to receive payments.</p>
+          </div>
+        </div>
+
+        <!-- Account Status Details -->
+        <div *ngIf="stripeAccountStatus" class="stripe-details">
+          <div class="stripe-stat">
+            <label>Account ID:</label>
+            <span>{{ stripeAccountStatus.accountId }}</span>
+          </div>
+          <div class="stripe-stat">
+            <label>Charges Enabled:</label>
+            <span class="status-indicator" [class.enabled]="stripeAccountStatus.chargesEnabled">
+              <lucide-icon [img]="stripeAccountStatus.chargesEnabled ? CheckCircle : XCircle" [size]="16"></lucide-icon>
+              {{ stripeAccountStatus.chargesEnabled ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="stripe-stat">
+            <label>Payouts Enabled:</label>
+            <span class="status-indicator" [class.enabled]="stripeAccountStatus.payoutsEnabled">
+              <lucide-icon [img]="stripeAccountStatus.payoutsEnabled ? CheckCircle : XCircle" [size]="16"></lucide-icon>
+              {{ stripeAccountStatus.payoutsEnabled ? 'Yes' : 'No' }}
+            </span>
+          </div>
+          <div class="stripe-stat">
+            <label>Details Submitted:</label>
+            <span class="status-indicator" [class.enabled]="stripeAccountStatus.detailsSubmitted">
+              <lucide-icon [img]="stripeAccountStatus.detailsSubmitted ? CheckCircle : XCircle" [size]="16"></lucide-icon>
+              {{ stripeAccountStatus.detailsSubmitted ? 'Yes' : 'No' }}
+            </span>
+          </div>
+        </div>
+
+        <button
+          class="btn-secondary"
+          (click)="openStripeDashboard()"
+          [disabled]="isLoadingStripe"
+        >
+          <lucide-icon [img]="ExternalLink" [size]="18"></lucide-icon>
+          Open Stripe Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

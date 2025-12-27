@@ -1,0 +1,357 @@
+<!-- Hero Section -->
+<section
+  class="hero-section relative overflow-hidden"
+  [style.background]="
+    'linear-gradient(135deg, ' +
+    colors.darkest +
+    ' 0%, ' +
+    colors.dark +
+    ' 50%, ' +
+    colors.medium +
+    ' 100%)'
+  "
+>
+  <div class="absolute inset-0 opacity-10">
+    <div
+      class="absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl"
+      [style.background-color]="colors.light"
+    ></div>
+    <div
+      class="absolute bottom-10 right-10 w-96 h-96 rounded-full blur-3xl"
+      [style.background-color]="colors.bright"
+    ></div>
+  </div>
+
+  <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+        {{ "home.heroTitle" | translate }}
+      </h1>
+      <p class="text-xl md:text-2xl text-white opacity-90 mb-10">
+        {{ "home.heroSubtitle" | translate }}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          (click)="navigateToRegister()"
+          class="px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+          [style.background-color]="colors.bright"
+          [style.color]="colors.darkest"
+        >
+          {{ "home.getStarted" | translate }}
+        </button>
+        <button
+          (click)="scrollToSection('features')"
+          class="px-8 py-4 text-lg font-semibold rounded-lg border-2 border-white text-white hover:bg-white transition-all duration-200"
+          [style.hover:color]="colors.dark"
+        >
+          {{ "home.learnMore" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <h2
+      class="text-3xl md:text-4xl font-bold text-center mb-12"
+      [style.color]="colors.darkest"
+    >
+      {{ "home.statsTitle" | translate }}
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div *ngFor="let stat of stats" class="text-center">
+        <div class="mb-4">
+          <svg
+            class="w-12 h-12 mx-auto"
+            fill="currentColor"
+            [style.color]="colors.bright"
+            viewBox="0 0 20 20"
+          >
+            <circle cx="10" cy="10" r="8" opacity="0.3" />
+            <path
+              d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"
+            />
+          </svg>
+        </div>
+        <div class="text-4xl font-bold mb-2" [style.color]="colors.medium">
+          {{ stat.value }}
+        </div>
+        <div class="text-gray-600">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2
+        class="text-3xl md:text-5xl font-bold mb-4"
+        [style.color]="colors.darkest"
+      >
+        {{ "home.featuresTitle" | translate }}
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        {{ "home.featuresSubtitle" | translate }}
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div
+        *ngFor="let feature of features"
+        class="bg-white rounded-xl p-8 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
+      >
+        <div
+          class="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+          [style.background-color]="colors.light"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="currentColor"
+            [style.color]="colors.dark"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold mb-3" [style.color]="colors.darkest">
+          {{ feature.title }}
+        </h3>
+        <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2
+        class="text-3xl md:text-5xl font-bold mb-4"
+        [style.color]="colors.darkest"
+      >
+        {{ "home.howItWorksTitle" | translate }}
+      </h2>
+      <p class="text-xl text-gray-600">
+        {{ "home.howItWorksSubtitle" | translate }}
+      </p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="flex flex-col md:flex-row items-center mb-12 last:mb-0"
+      >
+        <!-- Step Number -->
+        <div class="flex-shrink-0 mb-6 md:mb-0">
+          <div
+            class="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg"
+            [style.background]="
+              'linear-gradient(135deg, ' +
+              colors.bright +
+              ', ' +
+              colors.medium +
+              ')'
+            "
+          >
+            {{ step.number }}
+          </div>
+        </div>
+
+        <!-- Connector Line (hidden on mobile, last step) -->
+        <div
+          *ngIf="i < steps.length - 1"
+          class="hidden md:block flex-grow h-1 mx-4"
+          [style.background-color]="colors.light"
+        ></div>
+
+        <!-- Step Content -->
+        <div class="flex-grow md:ml-8 text-center md:text-left">
+          <h3 class="text-2xl font-bold mb-2" [style.color]="colors.dark">
+            {{ step.title }}
+          </h3>
+          <p class="text-gray-600">{{ step.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- For Patients/Doctors Section -->
+<section class="py-20" [style.background-color]="colors.darkest">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-12">
+      <!-- For Patients -->
+      <div class="bg-white rounded-2xl p-10 shadow-2xl">
+        <div
+          class="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+          [style.background-color]="colors.light"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="currentColor"
+            [style.color]="colors.dark"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+          </svg>
+        </div>
+        <h3 class="text-3xl font-bold mb-4" [style.color]="colors.darkest">
+          {{ "home.forPatientsTitle" | translate }}
+        </h3>
+        <p class="text-gray-600 text-lg mb-6">
+          {{ "home.forPatientsDesc" | translate }}
+        </p>
+        <button
+          (click)="navigateToRegister()"
+          class="px-6 py-3 rounded-lg font-semibold text-white hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+          [style.background-color]="colors.bright"
+        >
+          {{ "common.signUp" | translate }}
+        </button>
+      </div>
+
+      <!-- For Doctors -->
+      <div class="bg-white rounded-2xl p-10 shadow-2xl">
+        <div
+          class="w-16 h-16 rounded-full flex items-center justify-center mb-6"
+          [style.background-color]="colors.light"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="currentColor"
+            [style.color]="colors.dark"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-3xl font-bold mb-4" [style.color]="colors.darkest">
+          {{ "home.forDoctorsTitle" | translate }}
+        </h3>
+        <p class="text-gray-600 text-lg mb-6">
+          {{ "home.forDoctorsDesc" | translate }}
+        </p>
+        <button
+          (click)="navigateToRegister()"
+          class="px-6 py-3 rounded-lg font-semibold border-2 hover:text-white transition-all duration-200"
+          [style.border-color]="colors.bright"
+          [style.color]="colors.bright"
+          [style.hover:background-color]="colors.bright"
+        >
+          {{ "home.joinAsDoctor" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-white to-gray-50">
+  <div class="container mx-auto px-4 text-center">
+    <h2
+      class="text-3xl md:text-5xl font-bold mb-6"
+      [style.color]="colors.darkest"
+    >
+      {{ "home.ctaTitle" | translate }}
+    </h2>
+    <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+      {{ "home.ctaSubtitle" | translate }}
+    </p>
+    <button
+      (click)="navigateToRegister()"
+      class="px-10 py-5 text-xl font-bold rounded-lg text-white shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-200"
+      [style.background]="
+        'linear-gradient(135deg, ' + colors.bright + ', ' + colors.medium + ')'
+      "
+    >
+      {{ "home.ctaButton" | translate }}
+    </button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 text-white" [style.background-color]="colors.darkest">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+        <h3 class="text-2xl font-bold mb-4" [style.color]="colors.bright">
+          {{ "common.appName" | translate }}
+        </h3>
+        <p class="text-gray-300">{{ "home.heroSubtitle" | translate }}</p>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">
+          {{ "navigation.home" | translate }}
+        </h4>
+        <ul class="space-y-2 text-gray-300">
+          <li>
+            <a
+              (click)="scrollToSection('features')"
+              class="hover:text-white cursor-pointer"
+              >{{ "home.featuresTitle" | translate }}</a
+            >
+          </li>
+          <li>
+            <a
+              (click)="scrollToSection('how-it-works')"
+              class="hover:text-white cursor-pointer"
+              >{{ "home.howItWorksTitle" | translate }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">
+          {{ "navigation.doctors" | translate }}
+        </h4>
+        <ul class="space-y-2 text-gray-300">
+          <li>
+            <a
+              (click)="navigateToDoctorSearch()"
+              class="hover:text-white cursor-pointer"
+              >{{ "doctor.findDoctor" | translate }}</a
+            >
+          </li>
+          <li>
+            <a
+              (click)="navigateToRegister()"
+              class="hover:text-white cursor-pointer"
+              >{{ "doctor.bookAppointment" | translate }}</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold mb-4">
+          {{ "common.action" | translate }}
+        </h4>
+        <ul class="space-y-2 text-gray-300">
+          <li>
+            <a routerLink="/login" class="hover:text-white cursor-pointer">{{
+              "common.signIn" | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/register" class="hover:text-white cursor-pointer">{{
+              "common.signUp" | translate
+            }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+      <p>
+        &copy; 2024 {{ "common.appName" | translate }}. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

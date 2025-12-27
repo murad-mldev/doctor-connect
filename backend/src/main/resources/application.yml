@@ -1,3 +1,70 @@
 spring:
   application:
     name: doctor-connect
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/doctor_connect
+    username: root
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  session:
+    store-type: none
+    timeout: 1800s
+    cookie:
+      name: JSESSIONID
+      http-only: false
+      secure: false
+      same-site: lax
+      max-age: 1800s
+      path: /
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+file:
+  upload-dir: uploads
+
+notification:
+  email:
+    from: ${MAIL_FROM:noreply@doctorconnect.com}
+  sms:
+    enabled: ${SMS_ENABLED:true}
+    twilio:
+#      AC33826ea5d7c5ae641d599d4615984385
+      account-sid: ${TWILIO_ACCOUNT_SID:your-account-sid}
+      auth-token: ${TWILIO_AUTH_TOKEN:your-auth-token}
+      from-number: ${TWILIO_FROM_NUMBER:+1234567890}
+
+twilio:
+  api:
+    key: ${TWILIO_API_KEY:your-api-key}
+    secret: ${TWILIO_API_SECRET:your-api-secret}
+
+video:
+  google-meet:
+    enabled: ${MEET_ENABLED:true}
+    credentials-file: ${GOOGLE_CREDENTIALS_FILE:src/main/resources/google-credentials.json}
+    project-id: ${GOOGLE_PROJECT_ID:eproject-id}
+
+
+server:
+  port: 8000
+
+stripe:
+  publishable:
+    key: pk_test_51SctPZCGzYxI2Nv7TrQnNroCtXKW3P9aUrSQBs68XHm81cczS7EYhzwmtzeGYTn0TiSHGAyFvi1LftbSSSbrY0C7004X8dhyJB
+  secret:
+    key: sk_test_51SctPZCGzYxI2Nv7jTzUAIBN4De44fLlZNyWrcm2jycPKejsge0wayxeB4KfM5XJVU36WIocqLacCfqsA5xQnjZ700xhi3A2WY

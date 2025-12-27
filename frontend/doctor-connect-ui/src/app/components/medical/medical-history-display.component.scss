@@ -1,0 +1,144 @@
+.medical-history {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.history-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.history-section {
+  .section-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.5rem;
+    }
+
+    &.allergies svg {
+      color: #ef4444;
+    }
+
+    &.diseases svg {
+      color: #f97316;
+    }
+
+    &.medications svg {
+      color: #3b82f6;
+    }
+
+    &.surgeries svg {
+      color: #8b5cf6;
+    }
+
+    &.family svg {
+      color: #10b981;
+    }
+  }
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .tag {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 9999px;
+
+    &.tag-danger {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    &.tag-warning {
+      background: #ffedd5;
+      color: #7c2d12;
+    }
+  }
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .item-box {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+
+    &.medication {
+      background: #eff6ff;
+    }
+
+    &.surgery {
+      background: #f5f3ff;
+    }
+
+    p {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin: 0;
+    }
+  }
+}
+
+.info-box {
+  padding: 1rem;
+  border-radius: 0.5rem;
+
+  &.family-history {
+    background: #d1fae5;
+  }
+
+  &.notes {
+    background: #f9fafb;
+  }
+
+  p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+.blood-group-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #fee2e2;
+  color: #7f1d1d;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+}
+
+.last-updated {
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}

@@ -1,0 +1,166 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Healthcare Made <span class="accent">Simple</span></h1>
+      <p>
+        Connect with verified doctors instantly. Book appointments, get
+        consultations, and manage your health all in one place.
+      </p>
+      <div class="hero-buttons">
+        <button (click)="navigateToRegister()" class="btn-primary">
+          Start Free
+        </button>
+        <button (click)="navigateToDoctorSearch()" class="btn-outline">
+          Find Doctors
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div *ngFor="let stat of stats" class="stat-item">
+        <div class="stat-icon">
+          <lucide-icon [img]="stat.icon"></lucide-icon>
+        </div>
+        <div class="stat-value">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="section bg-white">
+  <div class="container">
+    <div class="section-header">
+      <h2>Everything You Need</h2>
+      <p>Comprehensive healthcare solutions at your fingertips</p>
+    </div>
+    <div class="features-grid">
+      <div *ngFor="let feature of features" class="feature-card">
+        <div class="feature-icon">
+          <lucide-icon [img]="feature.icon"></lucide-icon>
+        </div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works" class="section bg-gray">
+  <div class="container">
+    <div class="section-header">
+      <h2>How It Works</h2>
+      <p>Get started in three simple steps</p>
+    </div>
+    <div class="steps-grid">
+      <div *ngFor="let step of steps" class="step-item">
+        <div class="step-number">{{ step.number }}</div>
+        <div class="step-icon">
+          <lucide-icon [img]="step.icon"></lucide-icon>
+        </div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="section bg-white">
+  <div class="container">
+    <div class="section-header">
+      <h2>What Our Patients Say</h2>
+      <p>Trusted by thousands of patients across the country</p>
+    </div>
+    <div class="testimonials-grid">
+      <!-- Testimonial 1 -->
+      <div class="testimonial-card">
+        <div class="stars">
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+        </div>
+        <p class="testimonial-text">
+          "DoctorConnect made it so easy to find and consult with specialists.
+          The video call quality is excellent and the doctors are very
+          professional."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar"></div>
+          <div class="author-info">
+            <p class="author-name">Sarah Johnson</p>
+            <p class="author-role">Patient</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="testimonial-card">
+        <div class="stars">
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+        </div>
+        <p class="testimonial-text">
+          "I love how I can access my medical records and prescriptions anytime.
+          The platform is user-friendly and saves me so much time."
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar"></div>
+          <div class="author-info">
+            <p class="author-name">Michael Chen</p>
+            <p class="author-role">Patient</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="testimonial-card">
+        <div class="stars">
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+          <lucide-icon [img]="Star"></lucide-icon>
+        </div>
+        <p class="testimonial-text">
+          "Booking appointments is incredibly simple. I can see available slots
+          and book instantly. Highly recommend for busy professionals!"
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar"></div>
+          <div class="author-info">
+            <p class="author-name">Emily Rodriguez</p>
+            <p class="author-role">Patient</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to Get Started?</h2>
+    <p>Join thousands of patients and doctors today</p>
+    <div class="cta-buttons">
+      <button (click)="navigateToRegister()" class="btn-primary">
+        Sign Up Free
+      </button>
+      <button (click)="navigateToLogin()" class="btn-outline">Sign In</button>
+    </div>
+  </div>
+</section>

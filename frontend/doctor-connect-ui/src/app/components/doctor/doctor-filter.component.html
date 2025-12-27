@@ -1,0 +1,106 @@
+<div class="filter-panel">
+  <h3>Filter Doctors</h3>
+
+  <div class="filter-content">
+    <div class="filter-group">
+      <label>Search by Name</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.name"
+        (ngModelChange)="onFilterChange()"
+        placeholder="Doctor name..."
+        class="filter-input">
+    </div>
+
+    <div class="filter-group">
+      <label>Department</label>
+      <select
+        [(ngModel)]="filters.departmentId"
+        (ngModelChange)="onFilterChange()"
+        class="filter-select">
+        <option value="">All Departments</option>
+        <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Location</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.location"
+        (ngModelChange)="onFilterChange()"
+        placeholder="City or area..."
+        class="filter-input">
+    </div>
+
+    <div class="filter-group">
+      <label>Specialization</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.specialization"
+        (ngModelChange)="onFilterChange()"
+        placeholder="e.g., Cardiology, Pediatrics..."
+        class="filter-input">
+    </div>
+
+    <div class="filter-group">
+      <label>Experience (years)</label>
+      <div class="filter-range">
+        <input
+          type="number"
+          [(ngModel)]="filters.minExperience"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Min"
+          min="0"
+          class="filter-input-half">
+        <input
+          type="number"
+          [(ngModel)]="filters.maxExperience"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Max"
+          min="0"
+          class="filter-input-half">
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <label>Fee Range (৳)</label>
+      <div class="filter-range">
+        <input
+          type="number"
+          [(ngModel)]="filters.minFee"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Min"
+          min="0"
+          class="filter-input-half">
+        <input
+          type="number"
+          [(ngModel)]="filters.maxFee"
+          (ngModelChange)="onFilterChange()"
+          placeholder="Max"
+          min="0"
+          class="filter-input-half">
+      </div>
+    </div>
+
+    <div class="filter-checkbox">
+      <input
+        type="checkbox"
+        id="verifiedOnly"
+        [(ngModel)]="filters.verifiedOnly"
+        (ngModelChange)="onFilterChange()">
+      <label for="verifiedOnly">
+        Verified doctors only
+      </label>
+    </div>
+
+    <div class="filter-actions">
+      <button (click)="resetFilters()" class="btn-reset">
+        Reset
+      </button>
+      <button (click)="applyFilters()" class="btn-apply">
+        Apply
+      </button>
+    </div>
+  </div>
+</div>

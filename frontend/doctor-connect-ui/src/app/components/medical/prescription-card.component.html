@@ -1,0 +1,71 @@
+<div class="prescription-card">
+  <div class="prescription-header">
+    <div class="header-info">
+      <h3>Prescription</h3>
+      <p>Date: {{ prescription.prescriptionDate | date: 'medium' }}</p>
+    </div>
+    <span class="prescription-id">ID: {{ prescription.id?.substring(0, 8) }}</span>
+  </div>
+
+  <div class="prescription-content">
+    <div class="info-section">
+      <h4>Doctor Information</h4>
+      <p class="doctor-name">Dr. {{ prescription.doctor?.user?.fullName }}</p>
+      <p class="doctor-specialty">{{ prescription.doctor?.specialization }}</p>
+    </div>
+
+    <div class="info-section">
+      <h4>Patient Information</h4>
+      <p class="patient-name">{{ prescription.patient?.user?.fullName }}</p>
+    </div>
+
+    <div *ngIf="prescription.diagnosis" class="info-section">
+      <h4>Diagnosis</h4>
+      <p class="diagnosis-text">{{ prescription.diagnosis }}</p>
+    </div>
+
+    <div *ngIf="prescription.medicines && prescription.medicines.length > 0" class="medicines-section">
+      <h4>Prescribed Medicines</h4>
+      <div class="medicines-list">
+        <div *ngFor="let medicine of prescription.medicines" class="medicine-item">
+          <div class="medicine-details">
+            <p class="medicine-name">{{ medicine.name }}</p>
+            <p class="medicine-dosage">{{ medicine.dosage }}</p>
+            <p class="medicine-generic">{{ medicine.genericName }}</p>
+          </div>
+          <span class="medicine-type">{{ medicine.type }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="prescription.labTests && prescription.labTests.length > 0" class="tests-section">
+      <h4>Recommended Lab Tests</h4>
+      <div class="tests-list">
+        <div *ngFor="let test of prescription.labTests" class="test-item">
+          <p class="test-name">{{ test.name }}</p>
+          <p class="test-desc">{{ test.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="prescription.notes" class="notes-section">
+      <h4>Additional Notes</h4>
+      <p>{{ prescription.notes }}</p>
+    </div>
+
+    <div *ngIf="prescription.followUpDate" class="followup-alert">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <p class="followup-title">Follow-up Required</p>
+        <p class="followup-date">{{ prescription.followUpDate | date: 'medium' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="prescription-actions">
+    <button class="btn-download">Download PDF</button>
+    <button class="btn-print">Print</button>
+  </div>
+</div>

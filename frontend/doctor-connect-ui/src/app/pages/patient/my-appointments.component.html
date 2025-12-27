@@ -1,0 +1,231 @@
+<div class="appointments-container">
+  <div class="page-header">
+    <h1>My Appointments</h1>
+    <p>View and manage your scheduled appointments</p>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <label>Status</label>
+      <select [(ngModel)]="statusFilter">
+        <option value="">All Statuses</option>
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>From Date</label>
+      <input type="date" [(ngModel)]="fromDate">
+    </div>
+
+    <div class="filter-group">
+      <label>To Date</label>
+      <input type="date" [(ngModel)]="toDate">
+    </div>
+
+    <div class="filter-actions">
+      <button (click)="applyFilters()" class="btn-primary">Apply Filters</button>
+      <button (click)="clearFilters()" class="btn-secondary">Clear</button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading appointments...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && appointments.length === 0" class="empty-state">
+    <lucide-icon [img]="Calendar" [size]="64"></lucide-icon>
+    <h3>No appointments found</h3>
+    <p>You haven't booked any appointments yet</p>
+    <button routerLink="/patient/dashboard/search-doctors" class="btn-primary">
+      Find a Doctor
+    </button>
+  </div>
+
+  <!-- Appointments Table -->
+  <div *ngIf="!loading && appointments.length > 0" class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Appointment Date & Time</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appointment of appointments">
+          <td>
+            <div class="doctor-info">
+              <strong>Dr. {{ appointment.doctor?.user?.fullName }}</strong>
+              <small>{{ appointment.doctor?.specialization }}</small>
+            </div>
+          </td>
+          <td>
+            <div class="datetime-info">
+              <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+              {{ appointment.appointmentTime | date: 'mediumDate' }}
+              <br>
+              <lucide-icon [img]="Clock" [size]="16"></lucide-icon>
+              {{ appointment.appointmentTime | date: 'shortTime' }}
+            </div>
+          </td>
+          <td>{{ appointment.reason }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(appointment.status)">
+              {{ appointment.status }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button (click)="viewDetails(appointment)" class="btn-small btn-info">
+                View Details
+              </button>
+              <button
+                *ngIf="appointment.status === AppointmentStatus.CONFIRMED"
+                (click)="openRescheduleModal(appointment)"
+                class="btn-small btn-warning">
+                Reschedule
+              </button>
+              <button
+                *ngIf="appointment.status === AppointmentStatus.CONFIRMED"
+                (click)="cancelAppointment(appointment.id!)"
+                class="btn-small btn-danger">
+                Cancel
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- View Details Modal -->
+<app-modal
+  [(isOpen)]="showDetailsModal"
+  title="Appointment Details"
+  (closeModal)="closeDetailsModal()">
+  <div class="appointment-details" *ngIf="selectedAppointment">
+    <div class="details-grid">
+      <div class="detail-item">
+        <label>Doctor</label>
+        <span>Dr. {{ selectedAppointment.doctor?.user?.fullName }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Specialization</label>
+        <span>{{ selectedAppointment.doctor?.specialization }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Department</label>
+        <span>{{ selectedAppointment.doctor?.department?.name }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Appointment Date</label>
+        <span>{{ selectedAppointment.appointmentTime | date: 'fullDate' }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Appointment Time</label>
+        <span>{{ selectedAppointment.appointmentTime | date: 'shortTime' }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Status</label>
+        <span class="status-badge" [ngClass]="getStatusClass(selectedAppointment.status)">
+          {{ selectedAppointment.status }}
+        </span>
+      </div>
+      <div class="detail-item full-width">
+        <label>Reason for Visit</label>
+        <span>{{ selectedAppointment.reason }}</span>
+      </div>
+      <div class="detail-item" *ngIf="selectedAppointment.fee">
+        <label>Consultation Fee</label>
+        <span>${{ selectedAppointment.fee }}</span>
+      </div>
+    </div>
+
+    <div class="modal-actions" *ngIf="selectedAppointment.status === AppointmentStatus.CONFIRMED">
+      <button
+        (click)="openRescheduleModal(selectedAppointment)"
+        class="btn-warning">
+        Reschedule
+      </button>
+      <button
+        (click)="cancelAppointment(selectedAppointment.id!)"
+        class="btn-danger">
+        Cancel Appointment
+      </button>
+    </div>
+  </div>
+</app-modal>
+
+<!-- Reschedule Modal -->
+<app-modal
+  [(isOpen)]="showRescheduleModal"
+  title="Reschedule Appointment"
+  size="large"
+  (closeModal)="closeRescheduleModal()">
+  <div class="reschedule-content">
+    <div class="current-appointment-info" *ngIf="selectedAppointment">
+      <h4>Current Appointment</h4>
+      <p><strong>Doctor:</strong> Dr. {{ selectedAppointment.doctor?.user?.fullName }}</p>
+      <p><strong>Date:</strong> {{ selectedAppointment.appointmentTime | date: 'fullDate' }}</p>
+      <p><strong>Time:</strong> {{ selectedAppointment.appointmentTime | date: 'shortTime' }}</p>
+    </div>
+
+    <div class="date-selector">
+      <label for="reschedule-date">Select New Date:</label>
+      <input
+        id="reschedule-date"
+        type="date"
+        [(ngModel)]="rescheduleDate"
+        (change)="onRescheduleDateChange()"
+        [min]="minDate"
+        class="date-input">
+    </div>
+
+    <div *ngIf="loadingSlots" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading available slots...</p>
+    </div>
+
+    <div *ngIf="!loadingSlots && availableSlots.length === 0" class="empty-state">
+      <lucide-icon [img]="Calendar" [size]="48"></lucide-icon>
+      <p>No available slots for this date</p>
+    </div>
+
+    <div *ngIf="!loadingSlots && availableSlots.length > 0" class="slots-grid">
+      <div
+        *ngFor="let slot of availableSlots"
+        class="slot-card"
+        [class.selected]="selectedNewSlot?.id === slot.id"
+        (click)="selectedNewSlot = slot">
+        <div class="slot-info">
+          <lucide-icon [img]="Clock" [size]="20"></lucide-icon>
+          <span>{{ slot.startTime | date: 'shortTime' }} - {{ slot.endTime | date: 'shortTime' }}</span>
+        </div>
+        <div *ngIf="selectedNewSlot?.id === slot.id" class="selected-indicator">✓</div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button (click)="closeRescheduleModal()" class="btn-secondary">
+        Cancel
+      </button>
+      <button
+        (click)="rescheduleAppointment()"
+        [disabled]="!selectedNewSlot"
+        class="btn-primary">
+        Confirm Reschedule
+      </button>
+    </div>
+  </div>
+</app-modal>

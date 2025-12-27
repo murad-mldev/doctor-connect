@@ -1,0 +1,133 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Doctor Verification</h1>
+      <p>Review and approve doctor registrations</p>
+    </div>
+  </div>
+
+  <!-- Doctors List -->
+  <div class="content-card">
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Loading pending verifications...</p>
+    </div>
+
+    <div *ngIf="!isLoading && pendingDoctors.length === 0" class="empty-state">
+      <lucide-icon [img]="User" [size]="48"></lucide-icon>
+      <h3>No Pending Verifications</h3>
+      <p>All doctor registrations have been processed</p>
+    </div>
+
+    <div *ngIf="!isLoading && pendingDoctors.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Doctor Name</th>
+            <th>Specialization</th>
+            <th>Department</th>
+            <th>License Number</th>
+            <th>Qualifications</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doctor of pendingDoctors">
+            <td>
+              <div class="doctor-info">
+                <strong>Dr. {{ doctor.user?.fullName }}</strong>
+                <small>{{ doctor.user?.email }}</small>
+              </div>
+            </td>
+            <td>{{ doctor.specialization || '-' }}</td>
+            <td>{{ doctor.department?.name || '-' }}</td>
+            <td><strong>{{ doctor.licenseNumber || '-' }}</strong></td>
+            <td>{{ doctor.qualifications || '-' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon btn-view" (click)="viewDetails(doctor)" title="View Details">
+                  <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
+                </button>
+                <button class="btn-icon btn-verify" (click)="verifyDoctor(doctor.id!)" title="Verify">
+                  <lucide-icon [img]="CheckCircle" [size]="18"></lucide-icon>
+                </button>
+                <button class="btn-icon btn-reject" (click)="rejectDoctor(doctor.id!)" title="Reject">
+                  <lucide-icon [img]="XCircle" [size]="18"></lucide-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Doctor Details Modal -->
+<app-modal
+  [isOpen]="showDetailsModal"
+  [title]="'Doctor Details'"
+  [size]="'large'"
+  (close)="closeModal()"
+>
+  <div *ngIf="selectedDoctor" class="doctor-details">
+    <div class="details-section">
+      <h3>Personal Information</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Full Name:</label>
+          <span>Dr. {{ selectedDoctor.user?.fullName }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Email:</label>
+          <span>{{ selectedDoctor.user?.email }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Phone:</label>
+          <span>{{ selectedDoctor.user?.phone || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h3>Professional Information</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Specialization:</label>
+          <span>{{ selectedDoctor.specialization || '-' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Department:</label>
+          <span>{{ selectedDoctor.department?.name || '-' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Designation:</label>
+          <span>{{ selectedDoctor.designation || '-' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>License Number:</label>
+          <span><strong>{{ selectedDoctor.licenseNumber || '-' }}</strong></span>
+        </div>
+        <div class="detail-item full-width">
+          <label>Qualifications:</label>
+          <span>{{ selectedDoctor.qualifications || '-' }}</span>
+        </div>
+        <div class="detail-item full-width">
+          <label>Description:</label>
+          <span>{{ selectedDoctor.description || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeModal()">Close</button>
+      <button class="btn-danger" (click)="rejectDoctor(selectedDoctor.id!)">
+        <lucide-icon [img]="XCircle" [size]="18"></lucide-icon>
+        Reject
+      </button>
+      <button class="btn-success" (click)="verifyDoctor(selectedDoctor.id!)">
+        <lucide-icon [img]="CheckCircle" [size]="18"></lucide-icon>
+        Verify
+      </button>
+    </div>
+  </div>
+</app-modal>

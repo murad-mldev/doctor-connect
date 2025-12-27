@@ -1,0 +1,97 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Medical Reports</h1>
+      <p>Upload and manage your medical reports</p>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-alert" *ngIf="successMessage">
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <!-- Error Alert -->
+  <div class="error-alert" *ngIf="error">
+    <lucide-icon [img]="AlertCircle" [size]="20"></lucide-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="content-card upload-section">
+    <h2>Upload New Reports</h2>
+    <p class="upload-description">Upload medical reports, lab results, X-rays, or other documents (PDF, JPG, PNG)</p>
+
+    <app-file-upload
+      [accept]="'application/pdf,image/*'"
+      [multiple]="true"
+      [maxSizeMB]="10"
+      [label]="'Upload Medical Reports'"
+      (filesSelected)="onFilesSelected($event)"
+      (error)="onUploadError($event)"
+    ></app-file-upload>
+
+    <div class="uploading-state" *ngIf="isUploading">
+      <div class="spinner"></div>
+      <p>Uploading files...</p>
+    </div>
+  </div>
+
+  <!-- Reports List -->
+  <div class="content-card">
+    <h2>Your Medical Reports</h2>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading reports...</p>
+    </div>
+
+    <!-- Reports Table -->
+    <div class="reports-table" *ngIf="!isLoading && reports.length > 0">
+      <table>
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Uploaded</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports">
+            <td>
+              <div class="file-name-cell">
+                <lucide-icon [img]="getFileIcon(report.fileType || '')" [size]="20"></lucide-icon>
+                <span>{{ report.fileName }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="file-type-badge">{{ report.fileType }}</span>
+            </td>
+            <td>{{ getFileSize(report.sizeBytes || 0) }}</td>
+            <td>{{ report.uploadedAt | date:'short' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon" (click)="downloadReport(report)" title="Download">
+                  <lucide-icon [img]="Download" [size]="18"></lucide-icon>
+                </button>
+                <button class="btn-icon btn-danger" (click)="deleteReport(report.id!)" title="Delete">
+                  <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="!isLoading && reports.length === 0">
+      <lucide-icon [img]="FileText" [size]="48"></lucide-icon>
+      <h3>No Reports Uploaded</h3>
+      <p>Upload your medical reports to share them with your doctors</p>
+    </div>
+  </div>
+</div>

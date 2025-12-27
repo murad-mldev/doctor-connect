@@ -1,0 +1,113 @@
+<div class="dashboard-layout">
+  <app-sidebar [menuItems]="menuItems" [userRole]="'Doctor Portal'" (logoutClicked)="onLogout()"></app-sidebar>
+
+  <div class="dashboard-content">
+    <!-- Router outlet for child routes -->
+    <router-outlet></router-outlet>
+
+    <!-- Dashboard content (only show when on base dashboard) -->
+    <div class="dashboard-container" *ngIf="isOnBaseDashboard">
+      <div class="dashboard-header">
+        <h1>Dr. {{ userProfile?.fullName }}</h1>
+        <p>Welcome to your doctor portal</p>
+      </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card stat-primary">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <dt>Today's Appointments</dt>
+          <dd>{{ todayAppointments.length }}</dd>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-success">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <dt>Total Patients</dt>
+          <dd>{{ totalAppointments }}</dd>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-warning">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="stat-info">
+          <dt>Pending</dt>
+          <dd>{{ pendingAppointments.length }}</dd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Today's Schedule -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Today's Schedule</h2>
+        <a routerLink="/doctor/dashboard/schedule" class="card-link">Manage Schedule</a>
+      </div>
+      <div *ngIf="todayAppointments.length === 0" class="empty-state">
+        No appointments today
+      </div>
+      <div *ngIf="todayAppointments.length > 0" class="appointments-list">
+        <div *ngFor="let appointment of todayAppointments" class="appointment-item">
+          <div class="appointment-patient">{{ appointment.patient?.user?.fullName }}</div>
+          <div class="appointment-time">{{ appointment.appointmentTime | date: 'shortTime' }}</div>
+          <div class="appointment-reason">{{ appointment.reason }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions">
+        <a routerLink="/doctor/dashboard/appointments" class="action-card action-primary">
+          <div class="action-title">View All Appointments</div>
+          <div class="action-desc">Manage patient appointments</div>
+        </a>
+        <a routerLink="/doctor/dashboard/schedule" class="action-card action-success">
+          <div class="action-title">Manage Schedule</div>
+          <div class="action-desc">Set your availability</div>
+        </a>
+        <a routerLink="/doctor/dashboard/profile" class="action-card action-purple">
+          <div class="action-title">Update Profile</div>
+          <div class="action-desc">Edit your professional information</div>
+        </a>
+        <a routerLink="/doctor/dashboard/patients" class="action-card action-info">
+          <div class="action-title">View Patients</div>
+          <div class="action-desc">Manage patient records</div>
+        </a>
+        <a routerLink="/doctor/dashboard/video-queue" class="action-card action-warning">
+          <div class="action-title">Video Queue</div>
+          <div class="action-desc">Manage video consultations</div>
+        </a>
+        <a routerLink="/doctor/dashboard/analytics" class="action-card action-secondary">
+          <div class="action-title">Consultation Analytics</div>
+          <div class="action-desc">View performance metrics</div>
+        </a>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>

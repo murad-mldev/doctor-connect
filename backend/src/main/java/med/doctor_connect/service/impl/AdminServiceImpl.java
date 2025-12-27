@@ -28,7 +28,7 @@ public class AdminServiceImpl implements AdminService {
     private final DoctorProfileRepository doctorProfileRepository;
     private final PatientProfileRepository patientProfileRepository;
     private final AppointmentRepository appointmentRepository;
-    private final DoctorProfileMapper doctorMapper = DoctorProfileMapper.INSTANCE;
+    private final DoctorProfileMapper doctorMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,7 +47,12 @@ public class AdminServiceImpl implements AdminService {
             throw new RuntimeException("Doctor already verified");
         }
 
+        // Update doctor profile
         doctor.setApproved(true);
+
+        // Also verify the user account
+        doctor.getUser().setVerified(true);
+
         DoctorProfile updated = doctorProfileRepository.save(doctor);
         return doctorMapper.toDto(updated);
     }
@@ -57,7 +62,12 @@ public class AdminServiceImpl implements AdminService {
         DoctorProfile doctor = doctorProfileRepository.findById(doctorId)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
+        // Update doctor profile
         doctor.setApproved(false);
+
+        // Also unverify the user account if rejecting
+        doctor.getUser().setVerified(false);
+
         DoctorProfile updated = doctorProfileRepository.save(doctor);
         return doctorMapper.toDto(updated);
     }

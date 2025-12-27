@@ -89,6 +89,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
                         .requestMatchers("/test").permitAll()
                         .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/logout").permitAll()
+                        .requestMatchers("/api/v1/public/**").permitAll()  // Public endpoints - no auth required
                         .requestMatchers("/api/v1/doctors", "/api/v1/doctors/**", "/api/v1/search", "/api/v1/meta/departments").permitAll()
                         .anyRequest().authenticated()
                 )

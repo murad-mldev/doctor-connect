@@ -1,0 +1,158 @@
+.doctor-card {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.doctor-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.doctor-avatar-gradient {
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.doctor-name-section {
+  margin-left: 1rem;
+  flex: 1;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 0.25rem;
+  }
+
+  .specialty {
+    font-size: 0.875rem;
+    color: #2563eb;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+  }
+}
+
+.verified-badge {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    color: #10b981;
+    margin-right: 0.25rem;
+  }
+
+  span {
+    font-size: 0.75rem;
+    color: #059669;
+    font-weight: 500;
+  }
+}
+
+.doctor-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+    color: #9ca3af;
+    flex-shrink: 0;
+  }
+
+  &.fee-row {
+    color: #059669;
+    font-weight: 600;
+
+    svg {
+      color: #10b981;
+    }
+  }
+}
+
+.qualifications-box {
+  background: #eff6ff;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+
+  .qualifications-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #1e3a8a;
+    margin-bottom: 0.25rem;
+  }
+
+  .qualifications-text {
+    font-size: 0.875rem;
+    color: #1e40af;
+    margin: 0;
+  }
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+
+  .btn-book {
+    background: #3b82f6;
+    color: white;
+
+    &:hover {
+      background: #2563eb;
+    }
+  }
+
+  .btn-view {
+    background: #f3f4f6;
+    color: #374151;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+}

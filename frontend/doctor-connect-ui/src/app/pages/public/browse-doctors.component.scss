@@ -1,0 +1,258 @@
+.browse-doctors-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.5rem;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: #718096;
+    }
+  }
+
+  .search-section {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+
+    .search-filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .filter-group {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: #f7fafc;
+        border-radius: 8px;
+
+        lucide-icon {
+          color: #718096;
+        }
+
+        .filter-input {
+          flex: 1;
+          border: none;
+          background: transparent;
+          outline: none;
+          font-size: 1rem;
+
+          &::placeholder {
+            color: #a0aec0;
+          }
+        }
+      }
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &.btn-primary {
+          background: #4299e1;
+          color: white;
+
+          &:hover {
+            background: #3182ce;
+          }
+        }
+
+        &.btn-secondary {
+          background: #e2e8f0;
+          color: #4a5568;
+
+          &:hover {
+            background: #cbd5e0;
+          }
+        }
+      }
+    }
+  }
+
+  .loading-state {
+    text-align: center;
+    padding: 4rem;
+    color: #718096;
+  }
+
+  .doctors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .doctor-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .doctor-header {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .doctor-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.5rem;
+          font-weight: 600;
+          flex-shrink: 0;
+        }
+
+        .doctor-info {
+          flex: 1;
+
+          h3 {
+            font-size: 1.25rem;
+            color: #1a202c;
+            margin-bottom: 0.25rem;
+          }
+
+          .specialization {
+            color: #4299e1;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+          }
+
+          .department {
+            color: #718096;
+            font-size: 0.875rem;
+          }
+        }
+      }
+
+      .doctor-details {
+        margin-bottom: 1rem;
+        color: #4a5568;
+
+        .designation {
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .qualifications {
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .description {
+          font-size: 0.875rem;
+          line-height: 1.5;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+
+      .doctor-actions {
+        .btn-view-details {
+          width: 100%;
+          padding: 0.75rem;
+          background: #4299e1;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          transition: all 0.2s;
+
+          &:hover {
+            background: #3182ce;
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem;
+
+    lucide-icon {
+      color: #cbd5e0;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: #4a5568;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #718096;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1rem;
+
+    .btn-page {
+      padding: 0.75rem 1.5rem;
+      background: #4299e1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        background: #3182ce;
+      }
+
+      &:disabled {
+        background: #e2e8f0;
+        color: #a0aec0;
+        cursor: not-allowed;
+      }
+    }
+
+    .page-info {
+      color: #4a5568;
+      font-weight: 600;
+    }
+  }
+}

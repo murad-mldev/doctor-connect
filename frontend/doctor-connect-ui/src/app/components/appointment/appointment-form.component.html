@@ -1,0 +1,53 @@
+<div class="appointment-form">
+  <h3>Book Appointment</h3>
+
+  <form (ngSubmit)="onSubmit()" class="form-content">
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }}
+    </div>
+
+    <div class="form-group">
+      <label>Select Date & Time</label>
+      <select [(ngModel)]="formData.slotId" name="scheduleSlot" required class="form-select">
+        <option value="">Choose a time slot</option>
+        <option *ngFor="let slot of availableSlots" [value]="slot.id">
+          {{ slot.date }} - {{ slot.startTime }} to {{ slot.endTime }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Reason for Visit</label>
+      <textarea
+        [(ngModel)]="formData.reason"
+        name="reason"
+        rows="3"
+        placeholder="Please describe your symptoms or reason for consultation..."
+        class="form-textarea"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Appointment Type</label>
+      <select [(ngModel)]="appointmentType" name="appointmentType" class="form-select">
+        <option value="VIDEO">Video Consultation</option>
+        <option value="IN_PERSON">In-Person Visit</option>
+      </select>
+    </div>
+
+    <div class="fee-display">
+      <div class="fee-row">
+        <span>Consultation Fee:</span>
+        <span class="fee-amount">৳{{ consultationFee }}</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="loading || !formData.slotId" class="btn-submit">
+        {{ loading ? 'Booking...' : 'Book Appointment' }}
+      </button>
+      <button type="button" (click)="onCancel()" class="btn-cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

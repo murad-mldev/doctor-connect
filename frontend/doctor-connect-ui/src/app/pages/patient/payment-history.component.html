@@ -1,0 +1,84 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Payment History</h1>
+    <p>View your past payments and download receipts</p>
+  </div>
+
+  <div class="error-alert" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="content-card" *ngIf="isLoading">
+    <div class="loading-state">
+      <p>Loading payment history...</p>
+    </div>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && payments.length > 0">
+    <div class="payments-table-container">
+      <table class="payments-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Amount</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of payments">
+            <td>
+              <div class="date-cell">
+                {{ payment.createdAt | date:'medium' }}
+              </div>
+            </td>
+            <td>
+              <div class="doctor-cell">
+                <span class="doctor-name">{{ payment.appointment?.doctor?.user?.fullName || 'N/A' }}</span>
+                <span class="appointment-type">{{ payment.appointment?.appointmentType || 'Consultation' }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="amount-cell">
+                ${{ payment.amount?.toFixed(2) }}
+              </div>
+            </td>
+            <td>
+              <div class="method-cell">
+                <lucide-icon [img]="CreditCard" [size]="16"></lucide-icon>
+                <span>{{ payment.paymentMethod || 'CARD' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(payment.status)">
+                <lucide-icon [img]="getStatusIcon(payment.status)" [size]="16"></lucide-icon>
+                <span>{{ payment.status }}</span>
+              </span>
+            </td>
+            <td>
+              <button
+                class="btn-icon"
+                (click)="downloadReceipt(payment.id)"
+                title="Download Receipt"
+                *ngIf="payment.status === 'COMPLETED'"
+              >
+                <lucide-icon [img]="Download" [size]="18"></lucide-icon>
+              </button>
+              <span class="no-receipt" *ngIf="payment.status !== 'COMPLETED'">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && payments.length === 0">
+    <div class="empty-state">
+      <lucide-icon [img]="CreditCard" [size]="48"></lucide-icon>
+      <h3>No Payment History</h3>
+      <p>Your payment transactions will appear here after you book appointments</p>
+    </div>
+  </div>
+</div>

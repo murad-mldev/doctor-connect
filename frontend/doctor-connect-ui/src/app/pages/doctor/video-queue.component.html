@@ -1,0 +1,83 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Video Consultation Queue</h1>
+    <p>Manage your video consultation appointments</p>
+  </div>
+
+  <div class="error-alert" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Queue Stats -->
+  <div class="stats-grid" *ngIf="queue">
+    <div class="stat-card">
+      <lucide-icon [img]="Users" [size]="24" class="stat-icon"></lucide-icon>
+      <div class="stat-content">
+        <h3>{{ queue.totalWaiting || 0 }}</h3>
+        <p>Patients Waiting</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <lucide-icon [img]="Clock" [size]="24" class="stat-icon"></lucide-icon>
+      <div class="stat-content">
+        <h3>{{ queue.averageWaitTime || 0 }} min</h3>
+        <p>Avg. Wait Time</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <lucide-icon [img]="Video" [size]="24" class="stat-icon"></lucide-icon>
+      <div class="stat-content">
+        <h3>{{ queue.todayConsultations || 0 }}</h3>
+        <p>Today's Consultations</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waiting Patients List -->
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Waiting Patients</h2>
+      <span class="refresh-indicator">Auto-refreshing every 10s</span>
+    </div>
+
+    <div class="empty-state" *ngIf="waitingPatients.length === 0">
+      <lucide-icon [img]="Users" [size]="48"></lucide-icon>
+      <h3>No Patients Waiting</h3>
+      <p>Patients will appear here when they join the waiting room</p>
+    </div>
+
+    <div class="patients-queue" *ngIf="waitingPatients.length > 0">
+      <div class="queue-item" *ngFor="let patient of waitingPatients; let i = index">
+        <div class="queue-position">
+          <span class="position-badge">{{ i + 1 }}</span>
+        </div>
+        <div class="patient-details">
+          <div class="patient-info">
+            <lucide-icon [img]="Users" [size]="20"></lucide-icon>
+            <div>
+              <h4>{{ patient.patientName }}</h4>
+              <p class="appointment-time">Appointment: {{ patient.appointmentTime | date:'short' }}</p>
+            </div>
+          </div>
+          <div class="wait-info">
+            <span class="wait-time">
+              <lucide-icon [img]="Clock" [size]="16"></lucide-icon>
+              Waiting: {{ patient.waitingTime || 0 }} min
+            </span>
+          </div>
+        </div>
+        <div class="queue-actions">
+          <button
+            class="btn-primary"
+            (click)="startConsultation(patient.appointmentId)"
+            *ngIf="i === 0"
+          >
+            <lucide-icon [img]="Play" [size]="18"></lucide-icon>
+            <span>Start Consultation</span>
+          </button>
+          <span class="waiting-label" *ngIf="i > 0">In Queue</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

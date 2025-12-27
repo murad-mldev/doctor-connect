@@ -1,0 +1,97 @@
+<div class="browse-doctors-page">
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Find Your Doctor</h1>
+    <p>Browse our qualified doctors and book an appointment</p>
+  </div>
+
+  <!-- Search Filters -->
+  <div class="search-section">
+    <div class="search-filters">
+      <div class="filter-group">
+        <lucide-icon [img]="Search" [size]="20"></lucide-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchName"
+          placeholder="Search by doctor name..."
+          (keyup.enter)="onSearch()"
+          class="filter-input"
+        />
+      </div>
+      <div class="filter-group">
+        <lucide-icon [img]="Search" [size]="20"></lucide-icon>
+        <input
+          type="text"
+          [(ngModel)]="searchSpecialization"
+          placeholder="Search by specialization..."
+          (keyup.enter)="onSearch()"
+          class="filter-input"
+        />
+      </div>
+      <button (click)="onSearch()" class="btn-primary">Search</button>
+      <button (click)="clearFilters()" class="btn-secondary">Clear</button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading doctors...</p>
+  </div>
+
+  <!-- Doctors Grid -->
+  <div *ngIf="!isLoading && doctors.length > 0" class="doctors-grid">
+    <div *ngFor="let doctor of doctors" class="doctor-card" (click)="viewDoctorDetails(doctor.id!)">
+      <div class="doctor-header">
+        <div class="doctor-avatar">
+          Dr. {{ doctor.user?.fullName?.charAt(0) || 'D' }}
+        </div>
+        <div class="doctor-info">
+          <h3>Dr. {{ doctor.user?.fullName }}</h3>
+          <p class="specialization">{{ doctor.specialization || 'General Physician' }}</p>
+          <p class="department" *ngIf="doctor.department">{{ doctor.department.name }}</p>
+        </div>
+      </div>
+
+      <div class="doctor-details">
+        <p *ngIf="doctor.designation" class="designation">{{ doctor.designation }}</p>
+        <p *ngIf="doctor.qualifications" class="qualifications">{{ doctor.qualifications }}</p>
+        <p *ngIf="doctor.description" class="description">{{ doctor.description }}</p>
+      </div>
+
+      <div class="doctor-actions">
+        <button class="btn-view-details">
+          <lucide-icon [img]="Calendar" [size]="18"></lucide-icon>
+          View Available Appointments
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && doctors.length === 0" class="empty-state">
+    <lucide-icon [img]="Search" [size]="64"></lucide-icon>
+    <h3>No doctors found</h3>
+    <p>Try adjusting your search criteria</p>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="pagination">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 0"
+      class="btn-page"
+    >
+      Previous
+    </button>
+    <span class="page-info">
+      Page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalElements }} doctors)
+    </span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage >= totalPages - 1"
+      class="btn-page"
+    >
+      Next
+    </button>
+  </div>
+</div>

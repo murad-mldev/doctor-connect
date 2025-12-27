@@ -1,0 +1,361 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Medical History</h1>
+      <p>View your complete medical records and history</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <p>Loading medical history...</p>
+  </div>
+
+  <div *ngIf="!loading && !medicalHistory" class="content-card">
+    <div class="empty-state">
+      <lucide-icon [img]="Activity" [size]="48"></lucide-icon>
+      <h3>No Medical History</h3>
+      <p>Your medical records will appear here</p>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && medicalHistory" class="medical-history-content">
+    <!-- Patient Summary -->
+    <div class="content-card">
+      <h2>Patient Summary</h2>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <label>Blood Group:</label>
+          <span>{{ medicalHistory.bloodGroup || medicalHistory.patient?.bloodGroup || '-' }}</span>
+        </div>
+        <div class="summary-item">
+          <label>Total Appointments:</label>
+          <span>{{ medicalHistory.appointments?.length || 0 }}</span>
+        </div>
+        <div class="summary-item">
+          <label>Total Prescriptions:</label>
+          <span>{{ medicalHistory.prescriptions?.length || 0 }}</span>
+        </div>
+        <div class="summary-item">
+          <label>Last Updated:</label>
+          <span>{{ medicalHistory.lastUpdated ? (medicalHistory.lastUpdated | date:'medium') : '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Information -->
+    <div class="content-card" *ngIf="medicalHistory.allergies?.length || medicalHistory.chronicDiseases?.length || medicalHistory.currentMedications?.length || medicalHistory.pastSurgeries?.length">
+      <h2>Health Information</h2>
+
+      <div class="health-section" *ngIf="medicalHistory.allergies && medicalHistory.allergies.length > 0">
+        <div class="section-header">
+          <lucide-icon [img]="AlertCircle" [size]="20"></lucide-icon>
+          <h3>Allergies</h3>
+        </div>
+        <div class="tags-container">
+          <span class="tag tag-warning" *ngFor="let allergy of medicalHistory.allergies">{{ allergy }}</span>
+        </div>
+      </div>
+
+      <div class="health-section" *ngIf="medicalHistory.chronicDiseases && medicalHistory.chronicDiseases.length > 0">
+        <div class="section-header">
+          <lucide-icon [img]="Activity" [size]="20"></lucide-icon>
+          <h3>Chronic Diseases</h3>
+        </div>
+        <div class="tags-container">
+          <span class="tag tag-danger" *ngFor="let disease of medicalHistory.chronicDiseases">{{ disease }}</span>
+        </div>
+      </div>
+
+      <div class="health-section" *ngIf="medicalHistory.currentMedications && medicalHistory.currentMedications.length > 0">
+        <div class="section-header">
+          <lucide-icon [img]="Clipboard" [size]="20"></lucide-icon>
+          <h3>Current Medications</h3>
+        </div>
+        <div class="tags-container">
+          <span class="tag tag-info" *ngFor="let medication of medicalHistory.currentMedications">{{ medication }}</span>
+        </div>
+      </div>
+
+      <div class="health-section" *ngIf="medicalHistory.pastSurgeries && medicalHistory.pastSurgeries.length > 0">
+        <div class="section-header">
+          <lucide-icon [img]="Clipboard" [size]="20"></lucide-icon>
+          <h3>Past Surgeries</h3>
+        </div>
+        <div class="tags-container">
+          <span class="tag tag-secondary" *ngFor="let surgery of medicalHistory.pastSurgeries">{{ surgery }}</span>
+        </div>
+      </div>
+
+      <div class="health-section" *ngIf="medicalHistory.familyHistory">
+        <h3>Family History</h3>
+        <p>{{ medicalHistory.familyHistory }}</p>
+      </div>
+
+      <div class="health-section" *ngIf="medicalHistory.notes">
+        <h3>Additional Notes</h3>
+        <p>{{ medicalHistory.notes }}</p>
+      </div>
+    </div>
+
+    <!-- Appointments History -->
+    <div class="content-card" *ngIf="medicalHistory.appointments && medicalHistory.appointments.length > 0">
+      <h2>Appointments History</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Doctor</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let appointment of medicalHistory.appointments">
+              <td>{{ formatDate(appointment.appointmentTime) }}</td>
+              <td>
+                <div class="doctor-info">
+                  <strong>{{ appointment.doctor?.user?.fullName }}</strong>
+                  <small>{{ appointment.doctor?.specialization }}</small>
+                </div>
+              </td>
+              <td>
+                <span class="type-badge">-</span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(appointment.status)">
+                  {{ appointment.status }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-icon btn-view" (click)="viewAppointmentDetails(appointment)" title="View Details">
+                  <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Prescriptions History -->
+    <div class="content-card" *ngIf="medicalHistory.prescriptions && medicalHistory.prescriptions.length > 0">
+      <h2>Prescriptions History</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Doctor</th>
+              <th>Diagnosis</th>
+              <th>Medicines</th>
+              <th>Lab Tests</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let prescription of medicalHistory.prescriptions">
+              <td>{{ prescription.prescriptionDate | date:'short' }}</td>
+              <td>
+                <div class="doctor-info">
+                  <strong>{{ prescription.doctor?.user?.fullName }}</strong>
+                  <small>{{ prescription.doctor?.specialization }}</small>
+                </div>
+              </td>
+              <td>{{ prescription.diagnosis || '-' }}</td>
+              <td>
+                <span class="badge">{{ prescription.medicines?.length || 0 }}</span>
+              </td>
+              <td>
+                <span class="badge">{{ (prescription.tests?.length || 0) + (prescription.labTests?.length || 0) }}</span>
+              </td>
+              <td>
+                <button class="btn-icon btn-view" (click)="viewPrescriptionDetails(prescription)" title="View Details">
+                  <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Medical Records -->
+    <div class="content-card" *ngIf="medicalHistory.medicalRecords && medicalHistory.medicalRecords.length > 0">
+      <h2>Medical Records</h2>
+      <div class="records-list">
+        <div class="record-item" *ngFor="let record of medicalHistory.medicalRecords">
+          <div class="record-header">
+            <lucide-icon [img]="FileText" [size]="24"></lucide-icon>
+            <div class="record-info">
+              <h4>{{ record.title || 'Medical Record' }}</h4>
+              <small>{{ record.recordDate || record.createdAt | date:'medium' }}</small>
+            </div>
+          </div>
+          <div class="record-content" *ngIf="record.diagnosis || record.treatment">
+            <p *ngIf="record.diagnosis"><strong>Diagnosis:</strong> {{ record.diagnosis }}</p>
+            <p *ngIf="record.treatment"><strong>Treatment:</strong> {{ record.treatment }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Appointment Details Modal -->
+<app-modal
+  [isOpen]="showAppointmentModal"
+  [title]="'Appointment Details'"
+  [size]="'large'"
+  (closeModal)="closeAppointmentModal()"
+>
+  <div *ngIf="selectedAppointment" class="appointment-details">
+    <div class="details-section">
+      <h3>Doctor Information</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>{{ selectedAppointment.doctor?.user?.fullName }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Specialization:</label>
+          <span>{{ selectedAppointment.doctor?.specialization || '-' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Department:</label>
+          <span>{{ selectedAppointment.doctor?.department?.name || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h3>Appointment Details</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Date & Time:</label>
+          <span>{{ formatDate(selectedAppointment.appointmentTime) }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Status:</label>
+          <span class="status-badge" [ngClass]="getStatusClass(selectedAppointment.status)">
+            {{ selectedAppointment.status }}
+          </span>
+        </div>
+        <div class="detail-item">
+          <label>Fee:</label>
+          <span>{{ selectedAppointment.fee ? '$' + selectedAppointment.fee : '-' }}</span>
+        </div>
+        <div class="detail-item full-width" *ngIf="selectedAppointment.reason">
+          <label>Reason for Visit:</label>
+          <span>{{ selectedAppointment.reason }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeAppointmentModal()">
+        <lucide-icon [img]="X" [size]="18"></lucide-icon>
+        Close
+      </button>
+    </div>
+  </div>
+</app-modal>
+
+<!-- Prescription Details Modal -->
+<app-modal
+  [isOpen]="showPrescriptionModal"
+  [title]="'Prescription Details'"
+  [size]="'large'"
+  (closeModal)="closePrescriptionModal()"
+>
+  <div *ngIf="selectedPrescription" class="prescription-details">
+    <div class="details-section">
+      <h3>Doctor Information</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>{{ selectedPrescription.doctor?.user?.fullName }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Specialization:</label>
+          <span>{{ selectedPrescription.doctor?.specialization || '-' }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Date:</label>
+          <span>{{ selectedPrescription.prescriptionDate | date:'medium' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section" *ngIf="selectedPrescription.diagnosis">
+      <h3>Diagnosis</h3>
+      <p>{{ selectedPrescription.diagnosis }}</p>
+    </div>
+
+    <div class="details-section" *ngIf="selectedPrescription.medicines && selectedPrescription.medicines.length > 0">
+      <h3>Medicines</h3>
+      <table class="medicines-table">
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Dosage</th>
+            <th>Duration</th>
+            <th>Instructions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medicine of selectedPrescription.medicines">
+            <td>
+              <strong>{{ medicine.name }}</strong>
+              <small *ngIf="medicine.genericName" class="text-muted">{{ medicine.genericName }}</small>
+            </td>
+            <td>{{ medicine.dosage || '-' }}</td>
+            <td>{{ medicine.duration || '-' }}</td>
+            <td>{{ medicine.instructions || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="details-section" *ngIf="(selectedPrescription.tests && selectedPrescription.tests.length > 0) || (selectedPrescription.labTests && selectedPrescription.labTests.length > 0)">
+      <h3>Lab Tests</h3>
+      <table class="tests-table">
+        <thead>
+          <tr>
+            <th>Test Name</th>
+            <th>Instructions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let test of selectedPrescription.tests || []">
+            <td>
+              <strong>{{ test.name }}</strong>
+              <small *ngIf="test.description" class="text-muted">{{ test.description }}</small>
+            </td>
+            <td>{{ test.instructions || '-' }}</td>
+          </tr>
+          <tr *ngFor="let test of selectedPrescription.labTests || []">
+            <td>
+              <strong>{{ test.name }}</strong>
+              <small *ngIf="test.description" class="text-muted">{{ test.description }}</small>
+            </td>
+            <td>{{ test.instructions || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="details-section" *ngIf="selectedPrescription.notes">
+      <h3>Additional Notes</h3>
+      <p>{{ selectedPrescription.notes }}</p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closePrescriptionModal()">
+        <lucide-icon [img]="X" [size]="18"></lucide-icon>
+        Close
+      </button>
+    </div>
+  </div>
+</app-modal>

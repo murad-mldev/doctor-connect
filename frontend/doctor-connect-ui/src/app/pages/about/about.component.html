@@ -1,0 +1,96 @@
+<section class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1>About <span class="accent">DoctorConnect</span></h1>
+      <p>
+        DoctorConnect is a patient-first telehealth platform that connects
+        patients with verified healthcare professionals for convenient and
+        secure virtual care. Built with privacy, accessibility and ease-of-use
+        in mind.
+      </p>
+
+      <div class="hero-buttons">
+        <button (click)="navigateToRegister()" class="btn-get-started">
+          Get Started
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="section bg-white">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Mission</h2>
+      <p>
+        To make quality healthcare accessible to everyone by providing a simple,
+        secure and trusted platform for remote consultations, records and
+        follow-up care.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let f of features">
+        <div class="feature-icon">
+          <lucide-icon [img]="f.icon"></lucide-icon>
+        </div>
+        <h3>{{ f.title }}</h3>
+        <p>{{ f.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Team & Tech -->
+<section class="section bg-gray">
+  <div class="container">
+    <div class="section-header">
+      <h2>Who we are</h2>
+      <p>
+        A small team of healthcare, design and engineering experts building a
+        modern telemedicine experience — secure, reliable and patient-focused.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Built with modern tech</h3>
+        <p>
+          Angular, TypeScript, REST APIs, WebRTC for video, and secure cloud
+          storage for medical records.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Privacy-first</h3>
+        <p>
+          We follow best practices around encryption, access control and data
+          minimization to safeguard patient data.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Open to collaborators</h3>
+        <p>
+          We welcome contributors, doctors and partners who share our vision for
+          better, more accessible healthcare.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to try DoctorConnect?</h2>
+    <p>Sign up in minutes and start a consultation today.</p>
+
+    <div class="cta-buttons">
+      <button (click)="navigateToRegister()" class="btn-get-started">
+        Create Account
+      </button>
+    </div>
+  </div>
+</section>

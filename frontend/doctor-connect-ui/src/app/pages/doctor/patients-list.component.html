@@ -1,0 +1,75 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>My Patients</h1>
+    <p>View your assigned patients and their medical history</p>
+  </div>
+
+  <div class="error-alert" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="content-card" *ngIf="isLoading">
+    <div class="loading-state">
+      <p>Loading patients...</p>
+    </div>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && patients.length > 0">
+    <table class="patients-table">
+      <thead>
+        <tr>
+          <th>Patient Name</th>
+          <th>Last Visit</th>
+          <th>Total Visits</th>
+          <th>Upcoming</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          <td>
+            <div class="patient-info">
+              <lucide-icon [img]="Users" [size]="20"></lucide-icon>
+              <span>{{ patient.patientName }}</span>
+            </div>
+          </td>
+          <td>{{ patient.lastVisit | date:'medium' }}</td>
+          <td>{{ patient.totalVisits }}</td>
+          <td>
+            <span class="badge">{{ patient.upcomingAppointments }}</span>
+          </td>
+          <td>
+            <button class="btn-icon" (click)="viewMedicalHistory(patient)" title="View Medical History">
+              <lucide-icon [img]="FileText" [size]="18"></lucide-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && patients.length === 0">
+    <div class="empty-state">
+      <lucide-icon [img]="Users" [size]="48"></lucide-icon>
+      <h3>No Patients Yet</h3>
+      <p>Patients will appear here once they book appointments with you</p>
+    </div>
+  </div>
+</div>
+
+<!-- Medical History Modal -->
+<div class="modal-overlay" *ngIf="showMedicalHistoryModal" (click)="closeMedicalHistoryModal()">
+  <div class="modal-content large" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Medical History - {{ selectedPatient?.patientName }}</h2>
+      <button class="btn-icon" (click)="closeMedicalHistoryModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="loadingHistory">Loading medical history...</div>
+      <div *ngIf="!loadingHistory && medicalHistory">
+        <!-- TODO: Create medical-history-display component -->
+        <pre>{{ medicalHistory | json }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

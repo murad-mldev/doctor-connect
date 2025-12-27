@@ -1,0 +1,127 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>My Profile</h1>
+      <p>Update your personal information</p>
+    </div>
+    <button class="btn-primary" (click)="saveProfile()" [disabled]="isSaving">
+      <lucide-icon [img]="Save" [size]="20"></lucide-icon>
+      <span>{{ isSaving ? "Saving..." : "Save Changes" }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading profile...</p>
+  </div>
+
+  <div *ngIf="!isLoading && profile" class="profile-content">
+    <!-- Account Information -->
+    <div class="content-card">
+      <h2>Account Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <label>
+            <lucide-icon [img]="Mail" [size]="18"></lucide-icon>
+            Email:
+          </label>
+          <span>{{ profile.user.email }}</span>
+        </div>
+        <div class="info-item">
+          <label>Account Created:</label>
+          <span>{{ profile.createdAt | date : "medium" }}</span>
+        </div>
+        <div class="info-item">
+          <label>Last Updated:</label>
+          <span>{{ profile.updatedAt | date : "medium" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="content-card">
+      <h2>Personal Information</h2>
+      <form>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input
+              type="text"
+              [(ngModel)]="profileForm.fullName"
+              name="fullName"
+              placeholder="Enter your full name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>
+              <lucide-icon [img]="Phone" [size]="16"></lucide-icon>
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              [(ngModel)]="profileForm.phoneNumber"
+              name="phoneNumber"
+              placeholder="Enter phone number"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input
+              type="date"
+              [(ngModel)]="profileForm.dateOfBirth"
+              name="dateOfBirth"
+            />
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select [(ngModel)]="profileForm.gender" name="gender">
+              <option value="">Select gender</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Blood Group</label>
+            <select [(ngModel)]="profileForm.bloodGroup" name="bloodGroup">
+              <option value="">Select blood group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Emergency Contact</label>
+            <input
+              type="tel"
+              [(ngModel)]="profileForm.emergencyContact"
+              name="emergencyContact"
+              placeholder="Emergency contact number"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+          <textarea
+            [(ngModel)]="profileForm.address"
+            name="address"
+            placeholder="Enter your address"
+            rows="3"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

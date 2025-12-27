@@ -1,0 +1,44 @@
+<nav>
+  <div class="nav-container">
+    <div class="nav-content">
+      <!-- Logo -->
+      <div class="logo">
+        <a href="/"> Doctor<span class="brand-accent">Connect</span> </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="desktop-nav">
+        <a href="/"> Home </a>
+        <a href="/search-doctors">Find Doctors</a>
+        <a href="/browse-doctors">Appointments</a>
+        <a (click)="navigateToAbout()">About</a>
+        <button (click)="navigateToLogin()">Sign In</button>
+        <button (click)="navigateToRegister()" class="btn-get-started">
+          Get Started
+        </button>
+        <app-language-switcher></app-language-switcher>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-menu-button" (click)="toggleMenu()">
+        <lucide-icon *ngIf="!isMenuOpen" [img]="Menu"></lucide-icon>
+        <lucide-icon *ngIf="isMenuOpen" [img]="X"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" *ngIf="isMenuOpen">
+      <a href="/"> Home </a>
+      <a (click)="navigateToAbout()"> Home </a>
+      <a href="/browse-doctors">Appointments</a>
+      <a href="/find-doctors">Find Doctors</a>
+      <button (click)="navigateToLogin()">Sign In</button>
+      <button (click)="navigateToRegister()" class="btn-get-started">
+        Get Started
+      </button>
+      <div class="mobile-language-switcher">
+        <app-language-switcher></app-language-switcher>
+      </div>
+    </div>
+  </div>
+</nav>

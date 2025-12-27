@@ -1,0 +1,80 @@
+<nav class="navigation">
+  <div class="nav-container">
+    <div class="nav-content">
+      <div class="nav-left">
+        <div class="nav-brand">
+          <a routerLink="/">{{ 'common.appName' | translate }}</a>
+        </div>
+        <div class="nav-links">
+          <!-- Patient Links -->
+          <a *ngIf="userRole === 'PATIENT'" routerLink="/patient/dashboard" routerLinkActive="active">
+            {{ 'navigation.dashboard' | translate }}
+          </a>
+          <a *ngIf="userRole === 'PATIENT'" routerLink="/patient/search-doctors" routerLinkActive="active">
+            {{ 'doctor.findDoctor' | translate }}
+          </a>
+          <a *ngIf="userRole === 'PATIENT'" routerLink="/patient/appointments" routerLinkActive="active">
+            {{ 'appointment.myAppointments' | translate }}
+          </a>
+
+          <!-- Doctor Links -->
+          <a *ngIf="userRole === 'DOCTOR'" routerLink="/doctor/dashboard" routerLinkActive="active">
+            {{ 'navigation.dashboard' | translate }}
+          </a>
+          <a *ngIf="userRole === 'DOCTOR'" routerLink="/doctor/appointments" routerLinkActive="active">
+            {{ 'navigation.appointments' | translate }}
+          </a>
+          <a *ngIf="userRole === 'DOCTOR'" routerLink="/doctor/schedule" routerLinkActive="active">
+            {{ 'doctor.schedule' | translate }}
+          </a>
+
+          <!-- Admin Links -->
+          <a *ngIf="userRole === 'ADMIN'" routerLink="/admin/dashboard" routerLinkActive="active">
+            {{ 'navigation.dashboard' | translate }}
+          </a>
+          <a *ngIf="userRole === 'ADMIN'" routerLink="/admin/doctor-verification" routerLinkActive="active">
+            {{ 'navigation.doctors' | translate }}
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="language-switcher-wrapper">
+          <app-language-switcher></app-language-switcher>
+        </div>
+
+        <div *ngIf="isLoggedIn" class="nav-user">
+          <button class="notification-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+            </svg>
+            <span *ngIf="unreadNotifications > 0" class="notification-badge"></span>
+          </button>
+
+          <div class="user-menu">
+            <button (click)="toggleDropdown()" class="user-button">
+              <div class="user-avatar">
+                {{ userProfile?.fullName?.charAt(0) || 'U' }}
+              </div>
+              <span class="user-name">{{ userProfile?.fullName }}</span>
+              <svg class="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div *ngIf="showDropdown" class="dropdown-menu">
+              <a routerLink="/profile">{{ 'profile.myProfile' | translate }}</a>
+              <a routerLink="/settings">{{ 'navigation.settings' | translate }}</a>
+              <button (click)="logout()">{{ 'common.signOut' | translate }}</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoggedIn" class="nav-auth">
+          <a routerLink="/login" class="signin-link">{{ 'common.signIn' | translate }}</a>
+          <a routerLink="/register" class="signup-button">{{ 'common.signUp' | translate }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,231 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Manage Users</h1>
+      <p>View and manage user accounts and roles</p>
+    </div>
+  </div>
+
+  <!-- Error Alert -->
+  <div class="error-alert" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div class="content-card" *ngIf="isLoading">
+    <div class="loading-state">
+      <p>Loading users...</p>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="content-card" *ngIf="!isLoading && users.length > 0">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Roles</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">
+                {{ (user.fullName || user.emailOrPhoneNumber).charAt(0).toUpperCase() }}
+              </div>
+              <div>
+                <div class="user-name">{{ user.fullName || 'N/A' }}</div>
+                <div class="user-id">{{ user.id }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ user.email || 'N/A' }}</td>
+          <td>{{ user.phone || 'N/A' }}</td>
+          <td>
+            <div class="roles-container">
+              <button class="btn-roles" (click)="openRoleModal(user)">
+                <lucide-icon [img]="Shield" [size]="16"></lucide-icon>
+                <span>{{ getUserRoleNames(user) }}</span>
+              </button>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusBadgeClass(user)">
+              {{ getStatusText(user) }}
+            </span>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-icon" (click)="openEditModal(user)" title="Edit user">
+                <lucide-icon [img]="Edit2" [size]="18"></lucide-icon>
+              </button>
+              <button class="btn-icon btn-danger" (click)="openDeleteModal(user)" title="Delete user">
+                <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div class="content-card" *ngIf="!isLoading && users.length === 0">
+    <div class="empty-state">
+      <lucide-icon [img]="Users" [size]="48"></lucide-icon>
+      <h3>No Users Found</h3>
+      <p>There are no users in the system</p>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Edit User</h2>
+      <button class="btn-icon" (click)="closeEditModal()">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="editEmailOrPhone">Email or Phone Number</label>
+        <input
+          id="editEmailOrPhone"
+          type="text"
+          [(ngModel)]="editUserData.emailOrPhoneNumber"
+          placeholder="Enter email or phone number"
+          class="form-input"
+          readonly
+        />
+      </div>
+      <div class="form-group">
+        <label for="editFullName">Full Name</label>
+        <input
+          id="editFullName"
+          type="text"
+          [(ngModel)]="editUserData.fullName"
+          placeholder="Enter full name"
+          class="form-input"
+        />
+      </div>
+      <div class="form-group">
+        <label for="editEmail">Email</label>
+        <input
+          id="editEmail"
+          type="email"
+          [(ngModel)]="editUserData.email"
+          placeholder="Enter email"
+          class="form-input"
+        />
+      </div>
+      <div class="form-group">
+        <label for="editPhone">Phone</label>
+        <input
+          id="editPhone"
+          type="tel"
+          [(ngModel)]="editUserData.phone"
+          placeholder="Enter phone number"
+          class="form-input"
+        />
+      </div>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="editUserData.isActive"
+            class="form-checkbox"
+          />
+          <span>Active</span>
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="editUserData.isVerified"
+            class="form-checkbox"
+          />
+          <span>Verified</span>
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeEditModal()">Cancel</button>
+      <button class="btn-primary" (click)="submitEditUser()">
+        <lucide-icon [img]="Check" [size]="18"></lucide-icon>
+        <span>Update User</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Confirm Delete</h2>
+      <button class="btn-icon" (click)="closeDeleteModal()">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to delete the user <strong>{{ deletingUser?.fullName || deletingUser?.emailOrPhoneNumber }}</strong>?</p>
+      <p class="warning-text">This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+      <button class="btn-danger" (click)="confirmDelete()">
+        <lucide-icon [img]="Trash2" [size]="18"></lucide-icon>
+        <span>Delete</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Role Assignment Modal -->
+<div class="modal-overlay" *ngIf="showRoleModal" (click)="closeRoleModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Assign Roles</h2>
+      <button class="btn-icon" (click)="closeRoleModal()">
+        <lucide-icon [img]="X" [size]="20"></lucide-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-subtitle">Select roles for <strong>{{ assigningRolesUser?.fullName || assigningRolesUser?.emailOrPhoneNumber }}</strong></p>
+      <div class="roles-list">
+        <div *ngFor="let role of allRoles" class="role-item">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [checked]="isRoleSelected(role.id!)"
+              (change)="toggleRole(role.id!)"
+              class="form-checkbox"
+            />
+            <span class="role-label">
+              <lucide-icon [img]="Shield" [size]="16"></lucide-icon>
+              {{ role.name }}
+            </span>
+          </label>
+        </div>
+        <div *ngIf="allRoles.length === 0" class="no-roles">
+          <p>No roles available. Create roles first.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeRoleModal()">Cancel</button>
+      <button class="btn-primary" (click)="submitRoleAssignment()">
+        <lucide-icon [img]="Check" [size]="18"></lucide-icon>
+        <span>Save Roles</span>
+      </button>
+    </div>
+  </div>
+</div>

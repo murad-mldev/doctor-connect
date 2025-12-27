@@ -23,7 +23,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorProfileRepository doctorProfileRepository;
     private final ScheduleSlotRepository scheduleSlotRepository;
-    private final DoctorProfileMapper doctorMapper = DoctorProfileMapper.INSTANCE;
+    private final DoctorProfileMapper doctorMapper;
 
     @Override
     public Page<DoctorProfileDto> searchDoctors(UUID departmentId, String specialization, String name, int page, int limit) {

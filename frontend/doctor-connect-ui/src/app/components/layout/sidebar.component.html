@@ -1,0 +1,36 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <div class="sidebar-header">
+    <h2 *ngIf="!isCollapsed">{{ userRole }}</h2>
+    <button class="toggle-btn" (click)="toggleSidebar()" [attr.aria-label]="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <span *ngIf="!isCollapsed">◀</span>
+      <span *ngIf="isCollapsed">▶</span>
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul>
+      <li *ngFor="let item of menuItems">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [title]="isCollapsed ? item.label : ''"
+        >
+          <span class="menu-icon">
+            <lucide-icon [img]="item.icon"></lucide-icon>
+          </span>
+          <span class="menu-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+          <span class="menu-badge" *ngIf="item.badge && item.badge > 0 && !isCollapsed">{{ item.badge }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="onLogout()" [title]="isCollapsed ? 'Logout' : ''">
+      <span class="menu-icon">
+        <lucide-icon [img]="LogOut"></lucide-icon>
+      </span>
+      <span class="menu-label" *ngIf="!isCollapsed">Logout</span>
+    </button>
+  </div>
+</aside>

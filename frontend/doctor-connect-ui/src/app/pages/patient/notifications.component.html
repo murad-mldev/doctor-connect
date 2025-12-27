@@ -1,0 +1,56 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Notifications</h1>
+    <p>Stay updated with your appointments and medical activities</p>
+  </div>
+
+  <div class="error-alert" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <div class="content-card" *ngIf="isLoading">
+    <div class="loading-state">
+      <p>Loading notifications...</p>
+    </div>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && notifications.length > 0">
+    <div class="notifications-list">
+      <div
+        class="notification-item"
+        *ngFor="let notification of notifications"
+        [class.unread]="!notification.read"
+        [ngClass]="getNotificationClass(notification.type)"
+      >
+        <div class="notification-icon">
+          <lucide-icon [img]="getNotificationIcon(notification.type)" [size]="24"></lucide-icon>
+        </div>
+        <div class="notification-content">
+          <h3>{{ notification.title }}</h3>
+          <p>{{ notification.message }}</p>
+          <span class="notification-time">{{ notification.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="notification-actions" *ngIf="!notification.read">
+          <button
+            class="btn-icon"
+            (click)="markAsRead(notification.id)"
+            title="Mark as read"
+          >
+            <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+          </button>
+        </div>
+        <div class="read-indicator" *ngIf="notification.read">
+          <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card" *ngIf="!isLoading && notifications.length === 0">
+    <div class="empty-state">
+      <lucide-icon [img]="Bell" [size]="48"></lucide-icon>
+      <h3>No Notifications</h3>
+      <p>You're all caught up! New notifications will appear here.</p>
+    </div>
+  </div>
+</div>

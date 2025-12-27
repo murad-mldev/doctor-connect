@@ -1,0 +1,169 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Platform Earnings & Revenue</h1>
+      <p>Monitor platform revenue, commissions, and doctor payouts</p>
+    </div>
+    <button (click)="toggleDateFilter()" class="btn-filter">
+      <lucide-icon [img]="Filter" [size]="20"></lucide-icon>
+      {{ showDateFilter ? 'Hide' : 'Show' }} Filter
+    </button>
+  </div>
+
+  <!-- Date Filter -->
+  <div *ngIf="showDateFilter" class="filter-card">
+    <div class="filter-group">
+      <div class="input-group">
+        <label>Start Date</label>
+        <input type="date" [(ngModel)]="startDate" class="date-input" />
+      </div>
+      <div class="input-group">
+        <label>End Date</label>
+        <input type="date" [(ngModel)]="endDate" class="date-input" />
+      </div>
+      <div class="filter-actions">
+        <button (click)="applyDateFilter()" class="btn-primary">Apply</button>
+        <button (click)="clearDateFilter()" class="btn-secondary">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <p>Loading earnings data...</p>
+  </div>
+
+  <!-- Dashboard Stats -->
+  <div *ngIf="!isLoading && dashboardStats" class="stats-grid">
+    <div class="stat-card stat-revenue">
+      <div class="stat-icon">
+        <lucide-icon [img]="DollarSign" [size]="32"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Total Revenue (Stripe)</h3>
+        <p class="stat-value">{{ formatCurrency(dashboardStats.totalStripeRevenue) }}</p>
+        <span class="stat-label">{{ dashboardStats.totalStripeTransactions || 0 }} transactions</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-commission">
+      <div class="stat-icon">
+        <lucide-icon [img]="TrendingUp" [size]="32"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Platform Commission</h3>
+        <p class="stat-value">{{ formatCurrency(dashboardStats.totalStripePlatformCommission) }}</p>
+        <span class="stat-label">From Stripe payments</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-payout">
+      <div class="stat-icon">
+        <lucide-icon [img]="Users" [size]="32"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Doctor Payouts</h3>
+        <p class="stat-value">{{ formatCurrency(dashboardStats.totalStripeDoctorPayouts) }}</p>
+        <span class="stat-label">Total paid to doctors</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-transactions">
+      <div class="stat-icon">
+        <lucide-icon [img]="CreditCard" [size]="32"></lucide-icon>
+      </div>
+      <div class="stat-content">
+        <h3>Total Transactions</h3>
+        <p class="stat-value">{{ dashboardStats.totalStripeTransactions || 0 }}</p>
+        <span class="stat-label">Stripe payments</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Payment Methods Summary -->
+  <div *ngIf="allMethodsSummary" class="content-card">
+    <h2>Payment Methods Summary</h2>
+    <div class="payment-methods-grid">
+      <div class="method-card" *ngFor="let method of allMethodsSummary | keyvalue">
+        <h3>{{ method.key }}</h3>
+        <div class="method-stats">
+          <div class="method-stat">
+            <span class="label">Total Revenue:</span>
+            <span class="value">{{ formatCurrency(method.value.totalRevenue) }}</span>
+          </div>
+          <div class="method-stat">
+            <span class="label">Platform Commission:</span>
+            <span class="value">{{ formatCurrency(method.value.totalPlatformCommission) }}</span>
+          </div>
+          <div class="method-stat">
+            <span class="label">Doctor Payouts:</span>
+            <span class="value">{{ formatCurrency(method.value.totalDoctorPayouts) }}</span>
+          </div>
+          <div class="method-stat">
+            <span class="label">Transactions:</span>
+            <span class="value">{{ method.value.totalTransactions || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Breakdown Table -->
+  <div class="content-card">
+    <div class="card-header">
+      <h2>Payment Breakdown</h2>
+      <span class="date-range">{{ startDate }} to {{ endDate }}</span>
+    </div>
+
+    <div *ngIf="isLoadingBreakdown" class="loading-state">
+      <p>Loading payment breakdown...</p>
+    </div>
+
+    <div *ngIf="!isLoadingBreakdown && paymentBreakdown.length === 0" class="empty-state">
+      <lucide-icon [img]="CreditCard" [size]="64"></lucide-icon>
+      <h3>No Payment Data</h3>
+      <p>No payments found for the selected date range</p>
+    </div>
+
+    <div *ngIf="!isLoadingBreakdown && paymentBreakdown.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Total Amount</th>
+            <th>Platform Commission</th>
+            <th>Doctor Payout</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of paymentBreakdown">
+            <td>{{ formatDateDisplay(payment.paymentDate) }}</td>
+            <td>
+              <div class="user-cell">
+                <strong>{{ payment.doctorName || '-' }}</strong>
+                <small>{{ payment.doctorId }}</small>
+              </div>
+            </td>
+            <td>
+              <div class="user-cell">
+                <strong>{{ payment.patientName || '-' }}</strong>
+                <small>{{ payment.patientId }}</small>
+              </div>
+            </td>
+            <td><strong>{{ formatCurrency(payment.totalAmount) }}</strong></td>
+            <td class="commission">{{ formatCurrency(payment.platformCommission) }}</td>
+            <td class="payout">{{ formatCurrency(payment.doctorPayout) }}</td>
+            <td>
+              <span class="status-badge" [class.status-success]="payment.status === 'COMPLETED'">
+                {{ payment.status || 'PENDING' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

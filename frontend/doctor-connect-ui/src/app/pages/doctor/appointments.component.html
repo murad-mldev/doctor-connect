@@ -1,0 +1,266 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>My Appointments</h1>
+      <p>Manage and review patient appointments</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-section">
+    <div class="filter-group">
+      <label>Status</label>
+      <select [(ngModel)]="selectedStatus" name="status">
+        <option value="">All Statuses</option>
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+        <option value="NO_SHOW">No Show</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>From Date</label>
+      <input type="date" [(ngModel)]="fromDate" name="fromDate" />
+    </div>
+    <div class="filter-group">
+      <label>To Date</label>
+      <input type="date" [(ngModel)]="toDate" name="toDate" />
+    </div>
+    <div class="filter-actions">
+      <button class="btn-primary" (click)="applyFilters()">
+        <lucide-icon [img]="Filter" [size]="18"></lucide-icon>
+        Apply
+      </button>
+      <button class="btn-secondary" (click)="clearFilters()">Clear</button>
+    </div>
+  </div>
+
+  <!-- Appointments Table -->
+  <div class="content-card">
+    <div *ngIf="isLoading" class="loading-state">
+      <p>Loading appointments...</p>
+    </div>
+
+    <div *ngIf="!isLoading && appointments.length === 0" class="empty-state">
+      <lucide-icon [img]="Calendar" [size]="48"></lucide-icon>
+      <h3>No Appointments Found</h3>
+      <p>You don't have any appointments matching the selected filters</p>
+    </div>
+
+    <div *ngIf="!isLoading && appointments.length > 0" class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Date & Time</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let appointment of appointments">
+            <td>
+              <div class="patient-info">
+                <strong>{{ appointment.patient?.user?.fullName }}</strong>
+                <small>{{ appointment.patient?.user?.email }}</small>
+              </div>
+            </td>
+            <td>{{ formatDate(appointment.appointmentTime) }}</td>
+            <td>
+              <span class="type-badge">-</span>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(appointment.status)">
+                {{ appointment.status }}
+              </span>
+            </td>
+            <td>
+              <span class="payment-badge">
+                {{ appointment.fee ? '$' + appointment.fee : 'PENDING' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-icon btn-view" (click)="viewDetails(appointment)" title="View Details">
+                  <lucide-icon [img]="Eye" [size]="18"></lucide-icon>
+                </button>
+                <button
+                  class="btn-icon btn-prescription"
+                  (click)="openPrescriptionModal(appointment)"
+                  title="Add Prescription"
+                  *ngIf="appointment.status === AppointmentStatus.COMPLETED || appointment.status === AppointmentStatus.IN_PROGRESS"
+                >
+                  <lucide-icon [img]="FileText" [size]="18"></lucide-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Appointment Details Modal -->
+<app-modal
+  [isOpen]="showDetailsModal"
+  [title]="'Appointment Details'"
+  [size]="'large'"
+  (closeModal)="closeDetailsModal()"
+>
+  <div *ngIf="selectedAppointment" class="appointment-details">
+    <div class="details-section">
+      <h3>Patient Information</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>{{ selectedAppointment.patient?.user?.fullName }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Email:</label>
+          <span>{{ selectedAppointment.patient?.user?.email }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Phone:</label>
+          <span>{{ selectedAppointment.patient?.user?.phone || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h3>Appointment Details</h3>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Date & Time:</label>
+          <span>{{ formatDate(selectedAppointment.appointmentTime) }}</span>
+        </div>
+        <div class="detail-item">
+          <label>Status:</label>
+          <span class="status-badge" [ngClass]="getStatusClass(selectedAppointment.status)">
+            {{ selectedAppointment.status }}
+          </span>
+        </div>
+        <div class="detail-item">
+          <label>Fee:</label>
+          <span>{{ selectedAppointment.fee ? '$' + selectedAppointment.fee : '-' }}</span>
+        </div>
+        <div class="detail-item full-width" *ngIf="selectedAppointment.reason">
+          <label>Reason for Visit:</label>
+          <span>{{ selectedAppointment.reason }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="closeDetailsModal()">Close</button>
+      <button
+        class="btn-primary"
+        (click)="updateStatus(selectedAppointment.id!, AppointmentStatus.IN_PROGRESS)"
+        *ngIf="selectedAppointment.status === AppointmentStatus.CONFIRMED"
+      >
+        <lucide-icon [img]="Clock" [size]="18"></lucide-icon>
+        Start Consultation
+      </button>
+      <button
+        class="btn-success"
+        (click)="updateStatus(selectedAppointment.id!, AppointmentStatus.COMPLETED)"
+        *ngIf="selectedAppointment.status === AppointmentStatus.IN_PROGRESS"
+      >
+        <lucide-icon [img]="CheckCircle" [size]="18"></lucide-icon>
+        Mark Complete
+      </button>
+      <button
+        class="btn-primary"
+        (click)="openPrescriptionModal(selectedAppointment)"
+        *ngIf="selectedAppointment.status === AppointmentStatus.COMPLETED || selectedAppointment.status === AppointmentStatus.IN_PROGRESS"
+      >
+        <lucide-icon [img]="FileText" [size]="18"></lucide-icon>
+        Add Prescription
+      </button>
+    </div>
+  </div>
+</app-modal>
+
+<!-- Prescription Modal -->
+<app-modal
+  [isOpen]="showPrescriptionModal"
+  [title]="'Create Prescription'"
+  [size]="'large'"
+  (closeModal)="closePrescriptionModal()"
+>
+  <form (ngSubmit)="submitPrescription()">
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea
+        [(ngModel)]="prescriptionForm.notes"
+        name="notes"
+        placeholder="Enter prescription notes and diagnosis"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h4>Medicines</h4>
+        <button type="button" class="btn-small btn-primary" (click)="addMedicine()">
+          Add Medicine
+        </button>
+      </div>
+
+      <div *ngFor="let medicine of prescriptionForm.medicines; let i = index" class="medicine-item">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Medicine Name</label>
+            <input type="text" [(ngModel)]="medicine.name" [name]="'medicineName' + i" placeholder="Medicine name" />
+          </div>
+          <div class="form-group">
+            <label>Dosage</label>
+            <input type="text" [(ngModel)]="medicine.dosage" [name]="'dosage' + i" placeholder="e.g., 500mg, 2x daily" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duration</label>
+            <input type="text" [(ngModel)]="medicine.duration" [name]="'duration' + i" placeholder="e.g., 7 days" />
+          </div>
+          <div class="form-group">
+            <label>Instructions</label>
+            <input type="text" [(ngModel)]="medicine.instructions" [name]="'instructions' + i" placeholder="After meals" />
+          </div>
+          <button type="button" class="btn-icon btn-delete" (click)="removeMedicine(i)" title="Remove">×</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h4>Lab Tests</h4>
+        <button type="button" class="btn-small btn-primary" (click)="addLabTest()">
+          Add Lab Test
+        </button>
+      </div>
+
+      <div *ngFor="let test of prescriptionForm.tests; let i = index" class="lab-test-item">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Test Name</label>
+            <input type="text" [(ngModel)]="test.name" [name]="'testName' + i" placeholder="Test name" />
+          </div>
+          <div class="form-group">
+            <label>Instructions</label>
+            <input type="text" [(ngModel)]="test.instructions" [name]="'testInstructions' + i" placeholder="Fasting required" />
+          </div>
+          <button type="button" class="btn-icon btn-delete" (click)="removeLabTest(i)" title="Remove">×</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" (click)="closePrescriptionModal()">Cancel</button>
+      <button type="submit" class="btn-primary">Create Prescription</button>
+    </div>
+  </form>
+</app-modal>

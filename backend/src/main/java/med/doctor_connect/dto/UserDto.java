@@ -1,5 +1,6 @@
 package med.doctor_connect.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -31,8 +32,14 @@ public class UserDto {
     @Email
     private String email;
 
+    @JsonProperty("isActive")
     private boolean isActive;
+
+    @JsonProperty("isVerified")
     private boolean isVerified;
 
     private Set<RoleDto> roles;
+
+    // Transient field - only used during doctor registration, stored in DoctorProfile not User
+    private String licenseNumber;
 }
